@@ -415,19 +415,73 @@ body.noscroll{overflow:hidden}
   #matTbl td.l{max-width:80px;overflow:hidden;text-overflow:ellipsis;font-size:11px}
   #rivalTbl td.l{max-width:96px;overflow:hidden;text-overflow:ellipsis}
 }
+/* ===== view tabs + views ===== */
+.nav .tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{font-family:var(--cond);text-transform:uppercase;letter-spacing:.05em;font-weight:700;font-size:13px;
+  padding:8px 15px;border-radius:9px;border:1px solid var(--line2);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:.15s}
+.tab:hover{color:#fff;background:rgba(255,255,255,.08)}
+.tab.active{color:#06101f;background:var(--gold);border-color:var(--gold);box-shadow:0 0 18px rgba(246,196,81,.4)}
+.view{padding-top:8px}
+.view[hidden]{display:none}
+@media(max-width:520px){.tab{font-size:11.5px;padding:7px 10px}.nav .brandmark{display:none}}
+
+/* ===== next 3 matches ===== */
+.next3sec{margin:18px 0 30px}
+.n3head{display:flex;align-items:baseline;gap:12px;margin-bottom:13px}
+.n3head .ek{font-family:var(--cond);text-transform:uppercase;letter-spacing:.2em;font-weight:700;font-size:11px;color:var(--gold2)}
+.n3head h3{font-size:20px;font-weight:900}
+.n3grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:680px){.n3grid{grid-template-columns:1fr}}
+.n3card{background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--line2);border-radius:14px;padding:14px 16px}
+.n3when{font-family:var(--mono);font-size:12px;color:var(--gold2);margin-bottom:9px}
+.n3teams{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:15px;font-weight:700}
+.n3teams .tm{display:inline-flex;align-items:center;gap:6px;cursor:pointer}.n3teams .tm:hover{color:var(--gold2)}
+.n3teams .tm.tbd{color:var(--faint);cursor:default}
+.n3vs{color:var(--faint);font-size:11px;font-family:var(--mono);font-weight:400}
+.n3stage{font-size:11px;color:var(--faint);margin-top:9px;font-family:var(--mono)}
+
+/* ===== CTA buttons to the two sub-views ===== */
+.ctarow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:36px 0 8px}
+@media(max-width:680px){.ctarow{grid-template-columns:1fr}}
+.ctabtn{display:flex;align-items:center;gap:15px;text-align:left;cursor:pointer;width:100%;
+  background:linear-gradient(120deg,var(--surface2),var(--surface));border:1px solid var(--line2);border-radius:16px;padding:18px 20px;transition:border-color .15s,transform .1s}
+.ctabtn:hover{border-color:var(--gold);transform:translateY(-1px)}
+.ctabtn .ic{font-size:30px;flex:none}
+.ctabtn>div{flex:1;display:flex;flex-direction:column;gap:3px}
+.ctabtn b{font-size:16px;font-weight:900;color:var(--txt)}
+.ctabtn>div span{font-size:12px;color:var(--muted)}
+.ctabtn .ar{font-family:var(--disp);font-size:24px;color:var(--gold);flex:none}
+
+/* ===== knockout results ===== */
+.kolist{display:flex;flex-direction:column;gap:13px}
+.koround{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 15px}
+.korh{font-family:var(--cond);text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-size:13px;color:var(--gold2);margin-bottom:6px}
+.korn{color:var(--faint);font-size:11px;margin-left:6px;font-weight:400}
+.korow{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center;padding:7px 2px;border-top:1px solid var(--line)}
+.korow:first-of-type{border-top:none}
+.kot{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.koteams{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:14px}
+.koteams .tm{display:inline-flex;align-items:center;gap:5px;cursor:pointer}.koteams .tm:hover{color:var(--gold2)}
+.koteams .tm.tbd{color:var(--faint);cursor:default}
+.koteams .win{font-weight:800;color:var(--gold2)}
+.koteams .vs{color:var(--faint);font-size:11px;font-family:var(--mono)}
+.koteams .mscore{font-family:var(--mono);font-weight:700}.koteams .mscore .pen{color:var(--faint);font-size:11px;font-weight:400}
 </style>
 </head>
 <body>
 
 <nav class="nav" id="nav">
   <div class="brandmark"><span class="dot"></span><span>TOTOCALCIO&nbsp;26</span></div>
-  <a href="#standings">順位表</a><a href="#results">結果</a><a href="#schedule">日程</a><a href="#pick">配点</a><a href="#flow">早見表</a><a href="#rivals">参加者</a>
-  <a href="#groups">グループ</a><a href="#odds">勝ち上がり</a><a href="#bracket">ブラケット</a>
-  <a href="#model">モデル</a>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-v="home">🏠 ホーム</button>
+    <button class="tab" data-v="results">⚽ 日程・結果</button>
+    <button class="tab" data-v="ai">🤖 AI予想・評価</button>
+  </div>
 </nav>
 
 <div class="wrap">
 
+  <div class="view" id="v-home">
   <header class="hero">
     <div class="kicker">FIFA World Cup 26 · Family Pool · Zero-Sum</div>
     <h1 class="wordmark"><span class="toto">Totocalcio</span> <span class="yr">2026</span></h1>
@@ -441,7 +495,11 @@ body.noscroll{overflow:hidden}
     <span>FIFA WORLD CUP 26</span><span>FAMILY POOL · <b>19 PLAYERS</b></span><span>ZERO-SUM</span><span>48 NATIONS · 12 GROUPS</span>
   </div></div>
 
-  <!-- 01 STANDINGS (live) -->
+  <section id="next3sec" class="next3sec">
+    <div class="n3head"><span class="ek">Next 3 Matches</span><h3>次の3試合</h3></div>
+    <div class="n3grid" id="n3"></div>
+  </section>
+
   <section id="standings">
     <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">Live Leaderboard</div><h2>順位表</h2></div>
       <div class="note">試合結果から自動集計する実際の順位（ゼロサム）。行を<b>クリックで個人詳細</b>。</div></div>
@@ -449,16 +507,27 @@ body.noscroll{overflow:hidden}
     <div class="lb" id="lbBody"></div>
   </section>
 
-  <!-- 02 GROUP RESULTS (live) -->
-  <section id="results">
-    <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Group Tables · Live</div><h2>グループ実況（結果）</h2></div>
-      <div class="note">実際の試合結果から自動集計するグループ順位。<span style="color:var(--mex)">●</span>＝上位2（突破）。国名クリックでその国の日程。</div></div>
-    <div class="grtables" id="grBody"></div>
+  <section id="flow">
+    <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Point Swings · Cheat Sheet</div><h2>全員の得失点早見表</h2></div>
+      <div class="note">各国が<b>1勝するごと</b>に全員の点がどう動くか（19人 × 各国）。<span class="pos">緑＝もらう</span> / <span class="neg">赤＝払う</span>。列は期待勝利数順・横スクロール可。名前を<b>クリックで個人詳細</b>。</div></div>
+    <div class="tbl-wrap"><table id="matTbl"></table></div>
   </section>
 
-  <!-- 03 SCHEDULE -->
+  <section id="pick">
+    <div class="shead"><div class="num">03</div><div class="tt"><div class="ek">All Schedine · 7 Public Ballots</div><h2>参加者の予想（全配点）</h2></div>
+      <div class="note">全19人の確定予想（締切後・全員ぶん）。</div></div>
+    <div class="bgrid" id="bgrid"></div>
+  </section>
+
+  <div class="ctarow">
+    <button class="ctabtn" data-v="results"><span class="ic">⚽</span><div><b>試合スケジュール・結果</b><span>日程 / グループ表 / トーナメント結果</span></div><span class="ar">→</span></button>
+    <button class="ctabtn" data-v="ai"><span class="ic">🤖</span><div><b>AI予想・参加者評価</b><span>優勝確率 / 各自の評価 / モデル</span></div><span class="ar">→</span></button>
+  </div>
+  </div>
+
+  <div class="view" id="v-results" hidden>
   <section id="schedule">
-    <div class="shead"><div class="num">03</div><div class="tt"><div class="ek">Match Schedule</div><h2>対戦スケジュール</h2></div>
+    <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">Match Schedule</div><h2>対戦スケジュール</h2></div>
       <div class="note">全104試合。時刻は選択タイムゾーン（米＝東部ET）。国名を<b>クリックでその国の日程</b>。</div></div>
     <div class="tzbar" id="tzbar">
       <button class="tzbtn on" data-tz="jp">🇯🇵 日本時間</button>
@@ -472,46 +541,42 @@ body.noscroll{overflow:hidden}
     <div class="schedscroll"><div id="schedBody"></div></div>
   </section>
 
-  <!-- 03 BALLOTS -->
-  <section id="pick">
-    <div class="shead"><div class="num">04</div><div class="tt"><div class="ek">All Schedine · 7 Public Ballots</div><h2>参加者の予想（全配点）</h2></div>
-      <div class="note">全19人の確定予想（締切後・全員ぶん）。</div></div>
-    <div class="bgrid" id="bgrid"></div>
+  <section id="groupres">
+    <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Group Tables · Live</div><h2>グループ実況（結果）</h2></div>
+      <div class="note">実際の試合結果から自動集計するグループ順位。<span style="color:var(--mex)">●</span>＝上位2（突破）。国名クリックでその国の日程。</div></div>
+    <div class="grtables" id="grBody"></div>
   </section>
 
-  <!-- 02 CHEAT SHEET -->
-  <section id="flow">
-    <div class="shead"><div class="num">05</div><div class="tt"><div class="ek">Point Swings · Cheat Sheet</div><h2>全員の得失点早見表</h2></div>
-      <div class="note">各国が<b>1勝するごと</b>に全員の点がどう動くか（19人 × 各国）。<span class="pos">緑＝もらう</span> / <span class="neg">赤＝払う</span>。列は期待勝利数順・横スクロール可。名前を<b>クリックで個人詳細</b>。</div></div>
-    <div class="tbl-wrap"><table id="matTbl"></table></div>
+  <section id="koresults">
+    <div class="shead"><div class="num">04</div><div class="tt"><div class="ek">Knockout · Live</div><h2>トーナメント結果</h2></div>
+      <div class="note">決勝トーナメントの実際の対戦・結果（R32は6/28〜）。勝者をハイライト。国名クリックで日程。</div></div>
+    <div class="kolist" id="koBody"></div>
   </section>
+  </div>
 
-  <!-- 03 RIVALS -->
+  <div class="view" id="v-ai" hidden>
   <section id="rivals">
-    <div class="shead"><div class="num">06</div><div class="tt"><div class="ek">The 19-Player Pool</div><h2>参加者評価</h2></div>
+    <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">The 19-Player Pool</div><h2>参加者評価</h2></div>
       <div class="note">全19人の確定フィールドで評価（相手の推測なし）。平均/ベスト/ワースト/分布＝全シミュレーションの合計点。</div></div>
     <div class="tbl-wrap">
     <table id="rivalTbl"><thead><tr><th style="text-align:left">参加者</th><th style="text-align:left">P(0点以上)</th><th>平均</th><th>ベスト</th><th>ワースト</th><th style="text-align:left">分布 5–95% ・中央</th><th style="text-align:left">予想の特徴</th></tr></thead><tbody id="rivalBody"></tbody></table>
     </div>
   </section>
 
-  <!-- 04 GROUPS -->
   <section id="groups">
-    <div class="shead"><div class="num">07</div><div class="tt"><div class="ek">Final Standings</div><h2>グループ最終順位予想</h2></div>
+    <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Final Standings</div><h2>グループ最終順位予想</h2></div>
       <div class="note"><span style="color:var(--mex)">●</span> 進出予想。バー＝進出確率。小数字＝1位/2位率。</div></div>
     <div class="ggrid" id="ggrid"></div>
   </section>
 
-  <!-- 05 ODDS -->
   <section id="odds">
-    <div class="shead"><div class="num">08</div><div class="tt"><div class="ek">Road to the Final</div><h2>勝ち上がり・優勝確率（上位16）</h2></div>
+    <div class="shead"><div class="num">03</div><div class="tt"><div class="ek">Road to the Final</div><h2>勝ち上がり・優勝確率（上位16）</h2></div>
       <div class="note">各ラウンド到達確率。<span style="color:var(--gold)">金＝優勝確率</span>。</div></div>
     <div class="tbl-wrap">
     <table id="oddsTbl"><thead><tr><th style="text-align:left">国 / Nation</th><th>R16</th><th>準々</th><th>準決</th><th>決勝</th><th>優勝</th></tr></thead><tbody><tr><td class="l">Spain</td><td data-o="74">74</td><td data-o="51">51</td><td data-o="39">39</td><td data-o="26">26</td><td data-o="19" data-champ>19</td></tr><tr><td class="l">Argentina</td><td data-o="64">64</td><td data-o="45">45</td><td data-o="29">29</td><td data-o="19">19</td><td data-o="10" data-champ>10</td></tr><tr><td class="l">Brazil</td><td data-o="61">61</td><td data-o="43">43</td><td data-o="27">27</td><td data-o="15">15</td><td data-o="9" data-champ>9</td></tr><tr><td class="l">France</td><td data-o="61">61</td><td data-o="40">40</td><td data-o="24">24</td><td data-o="15">15</td><td data-o="8" data-champ>8</td></tr><tr><td class="l">Portugal</td><td data-o="59">59</td><td data-o="35">35</td><td data-o="20">20</td><td data-o="12">12</td><td data-o="6" data-champ>6</td></tr><tr><td class="l">England</td><td data-o="54">54</td><td data-o="30">30</td><td data-o="17">17</td><td data-o="10">10</td><td data-o="5" data-champ>5</td></tr><tr><td class="l">Morocco</td><td data-o="47">47</td><td data-o="29">29</td><td data-o="16">16</td><td data-o="7">7</td><td data-o="4" data-champ>4</td></tr><tr><td class="l">Japan</td><td data-o="44">44</td><td data-o="28">28</td><td data-o="16">16</td><td data-o="7">7</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Colombia</td><td data-o="54">54</td><td data-o="29">29</td><td data-o="15">15</td><td data-o="8">8</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Mexico</td><td data-o="69">69</td><td data-o="40">40</td><td data-o="18">18</td><td data-o="8">8</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Senegal</td><td data-o="48">48</td><td data-o="25">25</td><td data-o="13">13</td><td data-o="6">6</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Germany</td><td data-o="50">50</td><td data-o="25">25</td><td data-o="13">13</td><td data-o="6">6</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Netherlands</td><td data-o="42">42</td><td data-o="24">24</td><td data-o="12">12</td><td data-o="6">6</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Croatia</td><td data-o="47">47</td><td data-o="22">22</td><td data-o="11">11</td><td data-o="5">5</td><td data-o="2" data-champ>2</td></tr><tr><td class="l">Türkiye</td><td data-o="45">45</td><td data-o="23">23</td><td data-o="11">11</td><td data-o="5">5</td><td data-o="2" data-champ>2</td></tr><tr><td class="l">United States</td><td data-o="49">49</td><td data-o="25">25</td><td data-o="11">11</td><td data-o="5">5</td><td data-o="2" data-champ>2</td></tr></tbody></table>
     </div>
   </section>
 
-  <!-- 06 BRACKET -->
   <section id="bracket">
     <div class="shead"><div class="num">09</div><div class="tt"><div class="ek">Knockout</div><h2>予想決勝トーナメント</h2></div>
       <div class="note">各スロット＝最頻チーム、ハイライト＝予想勝者。左R32→右決勝、横スクロール可。</div></div>
@@ -520,9 +585,8 @@ body.noscroll{overflow:hidden}
     </details>
   </section>
 
-  <!-- 07 MODEL -->
   <section id="model">
-    <div class="shead"><div class="num">10</div><div class="tt"><div class="ek">The Math</div><h2>モデルと数学</h2></div></div>
+    <div class="shead"><div class="num">05</div><div class="tt"><div class="ek">The Math</div><h2>モデルと数学</h2></div></div>
     <details class="acc"><summary>強度・会場・相手モデル <span class="ek">Strength · Venue · Opponents</span></summary>
       <div class="body"><ul>
         <li>強度 = Elo × ブックメーカー優勝オッズ × FIFAランク（標準化ブレンド 0.35/0.45/0.20）。</li>
@@ -534,6 +598,7 @@ body.noscroll{overflow:hidden}
       </ul></div>
     </details>
   </section>
+  </div>
 
   <div class="foot">
     <span>TOTOCALCIO 2026 · 予想ダッシュボード</span>
@@ -874,7 +939,7 @@ function closeCountry(){document.getElementById('cmodal').classList.remove('open
 // ---- wire controls + initial render ----
 (function(){
   document.querySelectorAll('#tzbar .tzbtn[data-tz]').forEach(b=>b.onclick=()=>{
-    tzCur=b.dataset.tz; document.querySelectorAll('#tzbar .tzbtn[data-tz]').forEach(x=>x.classList.toggle('on',x===b)); renderSchedule();
+    tzCur=b.dataset.tz; document.querySelectorAll('#tzbar .tzbtn[data-tz]').forEach(x=>x.classList.toggle('on',x===b)); renderSchedule(); renderKO();
   });
   document.querySelectorAll('#tzbar .tzbtn[data-st]').forEach(b=>b.onclick=()=>{
     scStage=b.dataset.st; document.querySelectorAll('#tzbar .tzbtn[data-st]').forEach(x=>x.classList.toggle('on',x===b)); renderSchedule();
@@ -890,6 +955,48 @@ function closeCountry(){document.getElementById('cmodal').classList.remove('open
   renderStandings(); renderGroups(); renderSchedule();
 })();
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCountry();});
+// ======================= views: next-3 + knockout + router =======================
+function renderNext3(){
+  const wrap=document.getElementById('n3'); if(!wrap) return;
+  const Z='Asia/Tokyo';
+  const up=SCHEDULE.matches.filter(m=>m.status!=='FINISHED').slice(0,3);
+  let h='';
+  up.forEach(m=>{
+    const tag=m.group?`${m.group.replace('GROUP_','')}組`:(STAGE_JP[m.stage]||'');
+    h+=`<div class="n3card"><div class="n3when">${fmtD(m.utc,Z)} ${fmtT(m.utc,Z)} <span style="color:var(--faint)">日本時間</span></div>`+
+       `<div class="n3teams">${teamSpan(m.home)} <span class="n3vs">vs</span> ${teamSpan(m.away)}</div>`+
+       `<div class="n3stage">${tag}</div></div>`;
+  });
+  wrap.innerHTML=h||'<div class="lbnote">予定なし。</div>';
+}
+function renderKO(){
+  const wrap=document.getElementById('koBody'); if(!wrap) return;
+  const zone=zoneOf();
+  const order=[['LAST_32','ラウンド32'],['LAST_16','ラウンド16'],['QUARTER_FINALS','準々決勝'],['SEMI_FINALS','準決勝'],['THIRD_PLACE','3位決定戦'],['FINAL','決勝']];
+  let h='';
+  order.forEach(([st,lab])=>{
+    const ms=SCHEDULE.matches.filter(m=>m.stage===st); if(!ms.length) return;
+    let rows='';
+    ms.forEach(m=>{
+      const fin=m.status==='FINISHED', hw=fin&&m.winner==='HOME_TEAM', aw=fin&&m.winner==='AWAY_TEAM';
+      const mid=fin?`<span class="mscore">${m.score[0]}–${m.score[1]}${m.pens?` <span class="pen">PK ${m.pens[0]}-${m.pens[1]}</span>`:''}</span>`:'<span class="vs">vs</span>';
+      rows+=`<div class="korow"><span class="kot">${fmtD(m.utc,zone)}</span><div class="koteams">${teamSpan(m.home,hw)} ${mid} ${teamSpan(m.away,aw)}</div></div>`;
+    });
+    h+=`<div class="koround"><div class="korh">${lab}<span class="korn">${ms.length}試合</span></div>${rows}</div>`;
+  });
+  wrap.innerHTML=h;
+}
+function switchView(v){
+  ['home','results','ai'].forEach(x=>{ const el=document.getElementById('v-'+x); if(el)el.hidden=(x!==v); });
+  document.querySelectorAll('#tabs .tab').forEach(b=>b.classList.toggle('active',b.dataset.v===v));
+  if(('#'+v)!==location.hash) history.replaceState(null,'','#'+v);
+  window.scrollTo(0,0);
+}
+(function(){
+  renderNext3(); renderKO();
+  document.querySelectorAll('[data-v]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.v)));
+  const iv=(location.hash||'').replace('#',''); switchView(['home','results','ai'].includes(iv)?iv:'home');
+})();
 </script>
 </body>
 </html>
