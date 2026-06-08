@@ -37,7 +37,7 @@ a{color:inherit}
 
 /* NAV */
 .nav{position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;gap:4px;align-items:center;
-  padding:9px 14px;margin:0 -22px 0;backdrop-filter:blur(16px);
+  padding:9px 22px;margin:0;backdrop-filter:blur(16px);
   background:linear-gradient(180deg,rgba(8,12,22,.92),rgba(8,12,22,.74));
   border-bottom:1px solid var(--line)}
 .nav .brandmark{font-family:var(--disp);font-size:15px;letter-spacing:.04em;margin-right:auto;
@@ -411,8 +411,11 @@ body.noscroll{overflow:hidden}
 /* ===== mobile: clamp sticky name columns so the data columns get room ===== */
 #rivalTbl td.l,#rivalTbl thead th:first-child{position:sticky;left:0;background:var(--surface);z-index:1}
 #rivalTbl thead th:first-child{z-index:2}
+#matTbl thead th:first-child{position:sticky;left:0;background:var(--surface);z-index:3}
 @media(max-width:560px){
-  #matTbl td.l{max-width:80px;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+  #matTbl td.l,#matTbl thead th:first-child{width:76px;min-width:76px;max-width:76px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+  #matTbl td{padding:4px 4px;font-size:11px}
+  #matTbl thead th.cty{min-width:26px;font-size:13px}
   #rivalTbl td.l{max-width:96px;overflow:hidden;text-overflow:ellipsis}
 }
 /* ===== view tabs + views ===== */
@@ -787,7 +790,7 @@ function matCell(v){
 }
 (function(){
   const t=document.getElementById('matTbl'); if(!t||!MATRIX.countries) return;
-  let head='<thead><tr><th style="text-align:left">参加者 ＼ 国（1勝あたり）</th>';
+  let head='<thead><tr><th style="text-align:left">参加者＼国</th>';
   MATRIX.countries.forEach(c=>{head+=`<th class="cty" title="${c.nm} · 期待勝利数 ${c.ew}">${FLAGS[c.nm]||c.nm.slice(0,3)}</th>`;});
   head+='</tr></thead><tbody>';
   let body='';
