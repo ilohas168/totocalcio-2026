@@ -1,0 +1,59 @@
+name: Live update (standings + schedule)
+
+# Polls football-data.org for new results and auto-refreshes the dashboard.
+# Needs repo secret FOOTBALL_DATA_TOKEN (Settings → Secrets → Actions).
+on:
+  schedule:
+    - cron: '*/15 * * * *'      # every 15 min (UTC)
+  workflow_dispatch:            # manual "Run workflow" button
+
+permissions:
+  contents: write
+
+concurrency:                    # never let two updates race on a push
+  group: live-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # only run inside the tournament window (no-op before/after) — keeps API
+      # quota and Actions minutes from being spent year-round
+      - id: window
+        run: |
+          today=$(date -u +%Y%m%d)
+          if [ "$today" -ge 20260610 ] && [ "$today" -le 20260721 ]; then
+            echo "go=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=no (outside 2026-06-10..07-21)" >> "$GITHUB_OUTPUT"
+            echo "go=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.go == 'yes'
+        with:
+          python-version: '3.12'
+
+      - name: Fetch results + refresh live sections
+        if: steps.window.outputs.go == 'yes'
+        env:
+          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
+        run: |
+          python report/fetch_matches.py
+          python report/refresh_live.py
+
+      - name: Commit & push if anything changed
+        if: steps.window.outputs.go == 'yes'
+        run: |
+          git config user.name  "totocalcio-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "live: auto-update standings + schedule [skip ci]"
+            git push
+          fi

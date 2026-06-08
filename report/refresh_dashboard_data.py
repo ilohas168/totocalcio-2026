@@ -130,6 +130,30 @@ MATRIX = {
              for i, lab in enumerate(labels)],
 }
 
+# ---- LIVE: standings + schedule from real match results --------------------
+# wins so far (country -> count) under the pool rule, written by fetch_matches.py
+try:
+    real_wins = json.loads((DATA / "results.json").read_text()).get("wins", {})
+except FileNotFoundError:
+    real_wins = {}
+Wreal = np.array([real_wins.get(n, 0) for n in names], dtype=float)   # (48,)
+live = PW @ Wreal                                   # (N,) actual zero-sum net so far
+STANDINGS = sorted(
+    [{"name": disp(lab), "you": lab == "あなた", "joker": lab in outlier_set,
+      "score": int(round(float(live[i]))), "mean": STATS[lab]["mean"]}
+     for i, lab in enumerate(labels)],
+    key=lambda r: (-r["score"], -r["mean"]))
+
+try:
+    sched = json.loads((DATA / "schedule.json").read_text())
+    SCHEDULE = {"matches": sched["matches"],
+                "finished": sum(1 for m in sched["matches"] if m["status"] == "FINISHED"),
+                "asof": ""}
+except FileNotFoundError:
+    SCHEDULE = {"matches": [], "finished": 0, "asof": ""}
+print(f"live: {int(Wreal.sum())} wins counted · {SCHEDULE['finished']}/104 matches finished · "
+      f"leader={STANDINGS[0]['name']} {STANDINGS[0]['score']:+d}")
+
 # headline numbers (single real field — no scenarios)
 you_i = labels.index("あなた")
 net = STATS[labels[you_i]]["mean"]
@@ -218,6 +242,10 @@ html = sub1(r"const RIVALS=\[.*?\];",
 html = sub1(r"const RIVDOM=\[[^\]]*\];", f"const RIVDOM=[{lo},{hi}];", html)
 html = sub1(r"const MATRIX=\{.*?\};",
             "const MATRIX=" + json.dumps(MATRIX, ensure_ascii=False) + ";", html)
+html = sub1(r"const STANDINGS=\[.*?\];",
+            "const STANDINGS=" + json.dumps(STANDINGS, ensure_ascii=False) + ";", html)
+html = sub1(r"const SCHEDULE=\{.*?\};",
+            "const SCHEDULE=" + json.dumps(SCHEDULE, ensure_ascii=False) + ";", html)
 
 # (everyone-mode: the top hero stats strip and the ticker per-player/champion
 #  callouts were removed from the HTML, so there is nothing to inject there)
