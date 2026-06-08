@@ -150,37 +150,31 @@ td.z{color:var(--faint)}
 .joker{color:var(--gold)}
 
 /* GROUPS */
-.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
-.gcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.gcard .gh{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;
-  background:linear-gradient(90deg,var(--surface2),transparent);border-bottom:1px solid var(--line)}
-.gcard .gh .gl{font-family:var(--disp);font-size:18px;letter-spacing:.04em}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(166px,1fr));gap:8px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.gcard .gh{display:flex;align-items:center;justify-content:space-between;padding:7px 13px;background:linear-gradient(90deg,var(--surface2),transparent);border-bottom:1px solid var(--line)}
+.gcard .gh .gl{font-family:var(--disp);font-size:15px;letter-spacing:.04em}
 .gcard .gh .gl em{color:var(--gold);font-style:normal}
-.gcard .gh .hint{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:10px;color:var(--faint)}
-.grow{display:grid;grid-template-columns:18px 1fr 48px;align-items:center;gap:9px;padding:9px 16px;
-  border-bottom:1px solid var(--line);position:relative}
+.gcard .gh .hint{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:9px;color:var(--faint)}
+.grow{display:grid;grid-template-columns:8px 1fr auto;align-items:center;gap:6px;padding:5px 11px;border-bottom:1px solid var(--line);position:relative}
 .grow:last-child{border-bottom:none}
-.grow .q{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12)}
-.grow.qual .q{background:var(--mex);box-shadow:0 0 9px rgba(47,208,122,.6)}
-.grow .gn{display:flex;flex-direction:column;gap:1px;min-width:0}
-.grow .gn .nmrow{display:flex;align-items:center;font-weight:700;font-size:13.5px;white-space:nowrap}
-.grow.qual .gn{color:var(--txt)} .grow:not(.qual) .gn{color:var(--muted)}
-.grow .gn .sm{font-family:var(--mono);font-size:10px;color:var(--faint);font-weight:500;white-space:nowrap}
-.grow .adv{font-family:var(--mono);font-weight:700;font-size:13px;text-align:right}
-.grow .gbar{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--mex);opacity:.55;
-  transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.grow .q{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.12)}
+.grow.qual .q{background:var(--mex);box-shadow:0 0 8px rgba(47,208,122,.6)}
+.grow .gnm{display:flex;align-items:baseline;gap:5px;font-weight:700;font-size:12.5px;white-space:nowrap;overflow:hidden;min-width:0}
+.grow .gnm .tnm{overflow:hidden;text-overflow:ellipsis}
+.grow.qual .gnm{color:var(--txt)} .grow:not(.qual) .gnm{color:var(--muted)}
+.grow .gnm .sm{font-family:var(--mono);font-size:9px;color:var(--faint);font-weight:500;flex:none}
+.grow .adv{font-family:var(--mono);font-weight:700;font-size:12.5px;text-align:right}
+.grow .gbar{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--mex);opacity:.55;transition:width 1s cubic-bezier(.2,.7,.2,1)}
 .in .grow .gbar{width:var(--w)}
 
 /* ODDS */
-.oddsbar{position:relative;height:24px;border-radius:6px;background:rgba(255,255,255,.05);overflow:hidden;
-  display:flex;align-items:center;min-width:84px}
-.oddsbar .of{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:6px;
-  background:linear-gradient(90deg,rgba(47,208,122,.55),rgba(47,208,122,.2));
-  transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.oddsbar{position:relative;height:17px;border-radius:5px;background:rgba(255,255,255,.05);overflow:hidden;display:flex;align-items:center;min-width:54px}
+.oddsbar .of{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:5px;background:linear-gradient(90deg,rgba(47,208,122,.55),rgba(47,208,122,.2));transition:width .9s cubic-bezier(.2,.7,.2,1)}
 .oddsbar.champ .of{background:linear-gradient(90deg,var(--gold),rgba(246,196,81,.35))}
 .in .oddsbar .of{width:var(--w)}
-.oddsbar .ov{position:relative;font-family:var(--mono);font-weight:700;font-size:12px;padding-left:9px;
-  text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.oddsbar .ov{position:relative;font-family:var(--mono);font-weight:700;font-size:10.5px;padding-left:6px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+#oddsTbl td{padding:3px 5px}#oddsTbl th{padding:5px 5px;font-size:11px}
 
 /* BRACKET */
 .bkt{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 14px;align-items:stretch;scrollbar-color:var(--line2) transparent}
@@ -586,7 +580,7 @@ body.noscroll{overflow:hidden}
 
   <section id="groups">
     <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Final Standings</div><h2>グループ最終順位予想</h2></div>
-      <div class="note"><span style="color:var(--mex)">●</span> 進出予想。バー＝進出確率。小数字＝1位/2位率。</div></div>
+      <div class="note"><span style="color:var(--mex)">●</span> 進出予想（上位2）。％＝進出確率。</div></div>
     <div class="ggrid" id="ggrid"></div>
   </section>
 
@@ -680,7 +674,7 @@ for(const k in G){
   const c=document.createElement('div');c.className='gcard';
   let rows='';
   for(const [nm,p1,p2,adv,q] of G[k]){
-    rows+=`<div class="grow${q?' qual':''}"><span class="q"></span><span class="gn"><span class="nmrow"><span class="flag">${FLAGS[nm]||''}</span>${nm}</span><span class="sm">1位 ${p1}% · 2位 ${p2}%</span></span><span class="adv">${adv}%</span><span class="gbar" style="--w:${adv}%"></span></div>`;
+    rows+=`<div class="grow${q?' qual':''}"><span class="q"></span><span class="gnm"><span class="flag">${FLAGS[nm]||''}</span><span class="tnm">${nm}</span></span><span class="adv">${adv}%</span><span class="gbar" style="--w:${adv}%"></span></div>`;
   }
   c.innerHTML=`<div class="gh"><span class="gl">GROUP <em>${k}</em></span><span class="hint">進出確率</span></div>${rows}`;
   gg.appendChild(c);
