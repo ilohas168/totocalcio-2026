@@ -231,7 +231,7 @@ function closeCountry(){document.getElementById('cmodal').classList.remove('open
   });
   renderStandings(); renderSchedule();
 })();
-const _esc0=document.querySelector('script');document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCountry();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCountry();});
 """
 html = html.replace("\n</script>", JS_ADD + "</script>", 1)
 
