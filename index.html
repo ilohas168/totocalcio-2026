@@ -410,6 +410,7 @@ body.noscroll{overflow:hidden}
 
 /* ===== mobile: clamp sticky name columns so the data columns get room ===== */
 #rivalTbl td.l,#rivalTbl thead th:first-child{position:sticky;left:0;background:var(--surface);z-index:1}
+#rivalTbl td.l{cursor:pointer}#rivalTbl td.l:hover{color:var(--gold2)}
 #rivalTbl thead th:first-child{z-index:2}
 #matTbl thead th:first-child{position:sticky;left:0;background:var(--surface);z-index:3}
 @media(max-width:560px){
@@ -825,7 +826,7 @@ const RIVDOM=[-2707,2255];
     const lab=r.name;
     const mc=r.mean>=0?'pos':'neg';
     tr.innerHTML=
-      `<td class="l">${lab}</td>`+
+      `<td class="l" onclick="openModal(&#39;${lab}&#39;)">${lab} ›</td>`+
       `<td class="barcell"><span class="v">${r.pos}%</span><div class="track"><div class="fill" style="--w:${r.pos}%"></div></div></td>`+
       `<td class="${mc}">${sg(r.mean)}</td>`+
       `<td class="pos">${sg(r.best)}</td>`+
