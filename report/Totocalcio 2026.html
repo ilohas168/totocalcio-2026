@@ -447,7 +447,7 @@ body.noscroll{overflow:hidden}
 .n3stage{font-size:11px;color:var(--faint);margin-top:9px;font-family:var(--mono)}
 
 /* ===== CTA buttons to the two sub-views ===== */
-.ctarow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:36px 0 8px}
+.ctarow{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:36px 0 8px}
 @media(max-width:680px){.ctarow{grid-template-columns:1fr}}
 .ctabtn{display:flex;align-items:center;gap:15px;text-align:left;cursor:pointer;width:100%;
   background:linear-gradient(120deg,var(--surface2),var(--surface));border:1px solid var(--line2);border-radius:16px;padding:18px 20px;transition:border-color .15s,transform .1s}
@@ -492,7 +492,8 @@ body.noscroll{overflow:hidden}
   <div class="brandmark"><span class="dot"></span><span>TOTOCALCIO&nbsp;26</span></div>
   <div class="tabs" id="tabs">
     <button class="tab active" data-v="home">🏠 ホーム</button>
-    <button class="tab" data-v="results">⚽ 日程・結果</button>
+    <button class="tab" data-v="schedule">📅 日程</button>
+    <button class="tab" data-v="results">📊 結果</button>
     <button class="tab" data-v="ai">🤖 AI予想・評価</button>
   </div>
 </nav>
@@ -536,12 +537,13 @@ body.noscroll{overflow:hidden}
   </section>
 
   <div class="ctarow">
-    <button class="ctabtn" data-v="results"><span class="ic">⚽</span><div><b>試合スケジュール・結果</b><span>日程 / グループ表 / トーナメント結果</span></div><span class="ar">→</span></button>
+    <button class="ctabtn" data-v="schedule"><span class="ic">📅</span><div><b>対戦スケジュール</b><span>全104試合 / 3タイムゾーン</span></div><span class="ar">→</span></button>
+    <button class="ctabtn" data-v="results"><span class="ic">📊</span><div><b>結果</b><span>グループ表 / トーナメント結果</span></div><span class="ar">→</span></button>
     <button class="ctabtn" data-v="ai"><span class="ic">🤖</span><div><b>AI予想・参加者評価</b><span>優勝確率 / 各自の評価 / モデル</span></div><span class="ar">→</span></button>
   </div>
   </div>
 
-  <div class="view" id="v-results" hidden>
+  <div class="view" id="v-schedule" hidden>
   <section id="schedule">
     <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">Match Schedule</div><h2>対戦スケジュール</h2></div>
       <div class="note">全104試合。時刻は選択タイムゾーン（米＝東部ET）。国名を<b>クリックでその国の日程</b>。</div></div>
@@ -556,15 +558,18 @@ body.noscroll{overflow:hidden}
     </div>
     <div class="schedscroll"><div id="schedBody"></div></div>
   </section>
+  </div>
+
+  <div class="view" id="v-results" hidden>
 
   <section id="groupres">
-    <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Group Tables · Live</div><h2>グループ実況（結果）</h2></div>
+    <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">Group Tables · Live</div><h2>グループ実況（結果）</h2></div>
       <div class="note">実際の試合結果から自動集計するグループ順位。<span style="color:var(--mex)">●</span>＝上位2（突破）。国名クリックでその国の日程。</div></div>
     <div class="grtables" id="grBody"></div>
   </section>
 
   <section id="koresults">
-    <div class="shead"><div class="num">04</div><div class="tt"><div class="ek">Knockout · Live</div><h2>トーナメント結果</h2></div>
+    <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Knockout · Live</div><h2>トーナメント結果</h2></div>
       <div class="note">決勝トーナメントの実際の対戦・結果（R32は6/28〜）。勝者を金でハイライト・横スクロール可。国旗クリックで日程。</div></div>
     <div class="kolist" id="koBody"></div>
   </section>
@@ -1020,7 +1025,7 @@ function renderKO(){
   wrap.innerHTML=`<div class="kobr">${h}</div>`;
 }
 function switchView(v){
-  ['home','results','ai'].forEach(x=>{ const el=document.getElementById('v-'+x); if(el)el.hidden=(x!==v); });
+  ['home','schedule','results','ai'].forEach(x=>{ const el=document.getElementById('v-'+x); if(el)el.hidden=(x!==v); });
   document.querySelectorAll('#tabs .tab').forEach(b=>b.classList.toggle('active',b.dataset.v===v));
   if(('#'+v)!==location.hash) history.replaceState(null,'','#'+v);
   window.scrollTo(0,0);
@@ -1028,7 +1033,7 @@ function switchView(v){
 (function(){
   renderNext3(); renderKO();
   document.querySelectorAll('[data-v]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.v)));
-  const iv=(location.hash||'').replace('#',''); switchView(['home','results','ai'].includes(iv)?iv:'home');
+  const iv=(location.hash||'').replace('#',''); switchView(['home','schedule','results','ai'].includes(iv)?iv:'home');
 })();
 </script>
 </body>
