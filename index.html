@@ -183,25 +183,24 @@ td.z{color:var(--faint)}
   text-shadow:0 1px 3px rgba(0,0,0,.6)}
 
 /* BRACKET */
-.bkt{display:flex;gap:22px;overflow-x:auto;padding:6px 4px 18px;
-  scrollbar-color:var(--line2) transparent}
-.rnd{display:flex;flex-direction:column;min-width:170px}
-.rmatches{flex:1;display:flex;flex-direction:column;justify-content:space-around}
-.rname{font-family:var(--cond);text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-size:12px;
-  color:var(--gold);text-align:center;padding-bottom:6px;margin-bottom:6px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg)}
-.mt{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface)}
-.tm{display:flex;align-items:center;padding:8px 11px;font-size:12.5px;font-weight:600;
-  border-bottom:1px solid var(--line);color:var(--muted);white-space:nowrap}
-.tm:last-child{border-bottom:none}
-.tm.win{color:var(--txt);background:linear-gradient(90deg,rgba(246,196,81,.16),transparent)}
-.tm.win::after{content:"▸";margin-left:auto;color:var(--gold)}
-.champcard{display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:190px;
-  border:1px solid rgba(246,196,81,.45);border-radius:14px;
-  background:radial-gradient(120% 120% at 50% 0%,rgba(246,196,81,.18),var(--surface));padding:24px 16px}
-.champcard .lab{font-family:var(--cond);text-transform:uppercase;letter-spacing:.2em;font-size:11px;color:var(--gold)}
-.champcard .ico{font-size:42px;margin:8px 0}
-.champcard .cn{font-family:var(--disp);font-size:30px;text-transform:uppercase;text-align:center;line-height:.95}
-.champcard .pct{font-family:var(--mono);color:var(--muted);font-size:12px;margin-top:6px}
+.bkt{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 14px;align-items:stretch;scrollbar-color:var(--line2) transparent}
+.bkt .rnd{display:flex;flex-direction:column;min-width:64px;flex:none}
+.bkt .rname{font-family:var(--cond);text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:10px;color:var(--gold2);text-align:center;padding-bottom:5px;margin-bottom:5px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg)}
+.bkt .rmatches{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:5px}
+.bkt .mt{border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--surface)}
+.bkt .tm{display:flex;align-items:center;gap:5px;padding:3px 5px;line-height:1;border-bottom:1px solid var(--line);color:var(--muted)}
+.bkt .tm:last-child{border-bottom:none}
+.bkt .tm .fl{font-size:13px;filter:grayscale(.35);opacity:.85}
+.bkt .tm .cd{font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.02em}
+.bkt .tm.win{color:var(--txt);background:linear-gradient(90deg,rgba(246,196,81,.20),rgba(246,196,81,.02))}
+.bkt .tm.win .fl{filter:none;opacity:1;text-shadow:0 0 7px rgba(246,196,81,.6)}
+.bkt .tm.win .cd{color:var(--gold2)}
+.bkt .tm.win::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);margin-left:auto;box-shadow:0 0 6px rgba(246,196,81,.8)}
+.bkt .champcard{display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:118px;flex:none;border:1px solid rgba(246,196,81,.5);border-radius:12px;background:radial-gradient(120% 90% at 50% 0%,rgba(246,196,81,.20),var(--surface));padding:16px 12px}
+.bkt .champcard .lab{font-family:var(--cond);text-transform:uppercase;letter-spacing:.16em;font-size:9.5px;color:var(--gold);text-align:center}
+.bkt .champcard .ico{font-size:30px;margin:6px 0 2px}
+.bkt .champcard .cn{font-family:var(--disp);font-size:21px;text-transform:uppercase;text-align:center;line-height:1.02;color:var(--gold2)}
+.bkt .champcard .pct{font-family:var(--mono);color:var(--muted);font-size:9.5px;margin-top:6px;text-align:center;line-height:1.5}
 
 /* ACCORDION */
 .acc{background:var(--surface);border:1px solid var(--line);border-radius:13px;margin:11px 0;overflow:hidden}
@@ -410,6 +409,8 @@ body.noscroll{overflow:hidden}
 
 /* ===== mobile: clamp sticky name columns so the data columns get room ===== */
 #rivalTbl td.l,#rivalTbl thead th:first-child{position:sticky;left:0;background:var(--surface);z-index:1}
+#oddsTbl td.l,#oddsTbl thead th:first-child{position:sticky;left:0;background:var(--surface);z-index:1}
+#oddsTbl thead th:first-child{z-index:2}
 #rivalTbl td.l{cursor:pointer}#rivalTbl td.l:hover{color:var(--gold2)}
 #rivalTbl thead th:first-child{z-index:2}
 #matTbl thead th:first-child{position:sticky;left:0;background:var(--surface);z-index:3}
@@ -418,6 +419,7 @@ body.noscroll{overflow:hidden}
   #matTbl td{padding:4px 4px;font-size:11px}
   #matTbl thead th.cty{min-width:26px;font-size:13px}
   #rivalTbl td.l{max-width:96px;overflow:hidden;text-overflow:ellipsis}
+  #oddsTbl td.l{max-width:116px;overflow:hidden;text-overflow:ellipsis}
 }
 /* ===== view tabs + views ===== */
 .nav .tabs{display:flex;gap:6px;flex-wrap:wrap}
@@ -681,12 +683,14 @@ for(const k in G){
 
 // BRACKET
 const BK=[["R32", [["South Korea", "Canada", 0], ["Japan", "Morocco", 0], ["Germany", "Czechia", 0], ["France", "Paraguay", 0], ["Colombia", "England", 0], ["Spain", "Algeria", 0], ["United States", "Bosnia-Herzegovina", 0], ["Belgium", "Austria", 0], ["Brazil", "Netherlands", 0], ["Ivory Coast", "Senegal", 1], ["Mexico", "Ecuador", 0], ["Croatia", "Congo DR", 0], ["Argentina", "Uruguay", 0], ["Türkiye", "Iran", 0], ["Switzerland", "Egypt", 0], ["Portugal", "Panama", 0]]], ["R16", [["South Korea", "Japan", 1], ["Germany", "France", 1], ["Colombia", "Spain", 1], ["United States", "Belgium", 0], ["Brazil", "Senegal", 0], ["Mexico", "Croatia", 0], ["Argentina", "Türkiye", 0], ["Switzerland", "Portugal", 1]]], ["準々", [["Japan", "France", 1], ["Spain", "United States", 0], ["Brazil", "Mexico", 0], ["Argentina", "Portugal", 0]]], ["準決", [["France", "Spain", 1], ["Brazil", "Argentina", 1]]], ["決勝", [["Spain", "Argentina", 0]]]];
+const CODE={"South Korea":"KOR","United States":"USA","Ivory Coast":"CIV","Congo DR":"COD","Bosnia-Herzegovina":"BIH","Türkiye":"TUR","Czechia":"CZE","Netherlands":"NED","Switzerland":"SUI","Croatia":"CRO","Germany":"GER","Portugal":"POR","Uruguay":"URU","Paraguay":"PAR","Senegal":"SEN","England":"ENG","Algeria":"ALG","Austria":"AUT","Panama":"PAN","Ecuador":"ECU","Morocco":"MAR","Colombia":"COL","Belgium":"BEL","Argentina":"ARG","Brazil":"BRA","Mexico":"MEX","France":"FRA","Spain":"ESP","Japan":"JPN","Canada":"CAN","Iran":"IRN","Egypt":"EGY"};
+function bcode(nm){if(CODE[nm])return CODE[nm];return (nm||'').replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,3);}
 const bkt=document.getElementById('bkt');
 for(const [rn,mts] of BK){
   const col=document.createElement('div');col.className='rnd';
   let h=`<div class="rname">${rn}</div><div class="rmatches">`;
   for(const [a,b,win] of mts){
-    h+=`<div class="mt"><div class="tm ${win===0?'win':''}"><span class="flag">${FLAGS[a]||''}</span>${a}</div><div class="tm ${win===1?'win':''}"><span class="flag">${FLAGS[b]||''}</span>${b}</div></div>`;
+    h+=`<div class="mt"><div class="tm${win===0?' win':''}"><span class="fl">${FLAGS[a]||''}</span><span class="cd">${bcode(a)}</span></div><div class="tm${win===1?' win':''}"><span class="fl">${FLAGS[b]||''}</span><span class="cd">${bcode(b)}</span></div></div>`;
   }
   h+=`</div>`;
   col.innerHTML=h;bkt.appendChild(col);
