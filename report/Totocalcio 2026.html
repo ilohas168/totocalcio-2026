@@ -479,6 +479,9 @@ body.noscroll{overflow:hidden}
 .mditem.pick .mdpts b{color:var(--gold2)}
 .mditem.nopt{opacity:.55}
 .mddiv{font-family:var(--mono);font-size:10px;color:var(--faint);text-align:center;margin:11px 0 6px;letter-spacing:.04em;border-top:1px dashed var(--line);padding-top:9px}
+.cmtz{display:flex;gap:6px;margin:-2px 0 12px;flex-wrap:wrap}
+.cmtzb{font-family:var(--cond);text-transform:uppercase;letter-spacing:.03em;font-weight:700;font-size:11px;padding:5px 12px;border-radius:999px;border:1px solid var(--line2);background:var(--surface);color:var(--muted);cursor:pointer}
+.cmtzb.on{background:var(--gold);color:#1a1304;border-color:var(--gold)}
 </style>
 </head>
 <body>
@@ -628,6 +631,7 @@ body.noscroll{overflow:hidden}
 <div class="modal" id="cmodal" onclick="if(event.target===this)closeCountry()"><div class="modalbox">
   <div class="modalhead"><span class="mt" id="cmTitle"></span><button class="modalx" onclick="closeCountry()">×</button></div>
   <div class="cmsub" id="cmSub"></div>
+  <div class="cmtz"><button class="cmtzb on" data-tz="jp">日本時間</button><button class="cmtzb" data-tz="us">米国 ET</button><button class="cmtzb" data-tz="ch">スイス時間</button></div>
   <div id="cmBody"></div>
 </div></div>
 
@@ -845,7 +849,7 @@ let tzCur='jp', scStage='all';
 const esc=s=>(''+s).replace(/'/g,"\\'");
 function zoneOf(){return (TZ.find(t=>t.id===tzCur)||TZ[0]).zone;}
 function tzFull(){return {jp:'日本時間',us:'米国時間 ET',ch:'スイス時間'}[tzCur]||'';}
-function setTZ(tz){tzCur=tz;document.querySelectorAll('[data-tz]').forEach(x=>x.classList.toggle('on',x.dataset.tz===tz));renderSchedule();renderKO();renderNext3();}
+function setTZ(tz){tzCur=tz;document.querySelectorAll('[data-tz]').forEach(x=>x.classList.toggle('on',x.dataset.tz===tz));renderSchedule();renderKO();renderNext3();if(document.getElementById('cmodal').classList.contains('open'))renderCountry();}
 function fmtD(utc,zone){return new Date(utc).toLocaleDateString('ja-JP',{timeZone:zone,month:'numeric',day:'numeric',weekday:'short'});}
 function fmtT(utc,zone){return new Date(utc).toLocaleTimeString('en-GB',{timeZone:zone,hour:'2-digit',minute:'2-digit',hour12:false});}
 function dKey(utc,zone){return new Date(utc).toLocaleDateString('en-CA',{timeZone:zone});}
@@ -936,7 +940,9 @@ function renderGroups(){
 }
 
 // ---- country fixtures popup ----
-function openCountry(nm){
+let cmCountry=null;
+function renderCountry(){
+  const nm=cmCountry; if(!nm) return;
   const zone=zoneOf();
   const ms=SCHEDULE.matches.filter(m=>m.home===nm||m.away===nm);
   document.getElementById('cmTitle').innerHTML=`<span class="flag">${FLAGS[nm]||''}</span> ${nm}`;
@@ -951,9 +957,12 @@ function openCountry(nm){
   let h='';
   ms.forEach(m=>{ h+=`<div class="dayhd" style="position:static;border:none;padding:8px 2px 4px;margin:0">${fmtD(m.utc,zone)}</div>`+matchRow(m,zone); });
   document.getElementById('cmBody').innerHTML=h||'<div class="lbnote">日程未定。</div>';
+}
+function openCountry(nm){
+  cmCountry=nm; renderCountry();
   document.getElementById('cmodal').classList.add('open'); document.body.classList.add('noscroll');
 }
-function closeCountry(){document.getElementById('cmodal').classList.remove('open');if(!document.getElementById('modal').classList.contains('open'))document.body.classList.remove('noscroll');}
+function closeCountry(){cmCountry=null;document.getElementById('cmodal').classList.remove('open');if(!document.getElementById('modal').classList.contains('open'))document.body.classList.remove('noscroll');}
 
 // ---- wire controls + initial render ----
 (function(){
