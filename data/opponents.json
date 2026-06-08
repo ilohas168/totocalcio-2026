@@ -1,0 +1,30 @@
+{
+  "n_players": 19,
+  "publication": "FINAL — all 19 ballots known (deadline passed, no unknowns to model)",
+  "known": {
+    "A": {"Portugal": 10, "France": 9, "Spain": 8, "Argentina": 7, "England": 6, "Netherlands": 5, "Brazil": 4, "Belgium": 3, "Germany": 2, "Mexico": 1},
+    "B": {"France": 10, "England": 9, "Spain": 8, "Argentina": 7, "Netherlands": 6, "Portugal": 5, "Brazil": 4, "United States": 3, "Germany": 2, "Mexico": 1},
+    "C": {"Spain": 10, "France": 9, "Uruguay": 8, "Brazil": 7, "England": 6, "Mexico": 5, "Portugal": 4, "Belgium": 3, "Netherlands": 2, "Argentina": 1},
+    "D": {"France": 10, "England": 9, "Spain": 8, "Portugal": 7, "Brazil": 6, "United States": 5, "Netherlands": 4, "Argentina": 3, "Germany": 2, "Senegal": 1},
+    "E": {"France": 10, "England": 9, "Spain": 8, "Argentina": 7, "Brazil": 6, "Netherlands": 5, "Japan": 4, "Germany": 3, "Mexico": 2, "United States": 1},
+    "G": {"France": 10, "England": 9, "Spain": 8, "Argentina": 7, "Netherlands": 6, "Portugal": 5, "Brazil": 4, "Germany": 3, "Switzerland": 2, "Mexico": 1},
+    "H": {"France": 10, "Argentina": 9, "Brazil": 8, "England": 7, "Portugal": 6, "Spain": 5, "Netherlands": 4, "Germany": 3, "Belgium": 2, "United States": 1},
+    "I": {"Argentina": 10, "Spain": 9, "Brazil": 8, "France": 7, "Netherlands": 6, "Germany": 5, "Japan": 4, "Switzerland": 3, "Morocco": 2, "Belgium": 1},
+    "J": {"Argentina": 10, "Brazil": 9, "Spain": 8, "France": 7, "England": 6, "Germany": 5, "Portugal": 4, "Japan": 3, "Croatia": 2, "Iran": 1},
+    "K": {"Brazil": 10, "Portugal": 9, "Argentina": 8, "Germany": 7, "Spain": 6, "France": 5, "Japan": 4, "England": 3, "Switzerland": 2, "Mexico": 1},
+    "L": {"France": 10, "England": 9, "Spain": 8, "Argentina": 7, "Portugal": 6, "Switzerland": 5, "Germany": 4, "Brazil": 3, "Japan": 2, "Canada": 1},
+    "M": {"United States": 10, "Argentina": 9, "Spain": 8, "France": 7, "Austria": 6, "England": 5, "Japan": 4, "Netherlands": 3, "Brazil": 2, "South Korea": 1},
+    "N": {"Spain": 10, "France": 9, "England": 8, "Brazil": 7, "Argentina": 6, "Germany": 5, "Portugal": 4, "Netherlands": 3, "Uruguay": 2, "Belgium": 1},
+    "O": {"Brazil": 10, "Argentina": 9, "Spain": 8, "France": 7, "Portugal": 6, "England": 5, "Germany": 4, "Belgium": 3, "Japan": 2, "Morocco": 1},
+    "P": {"Brazil": 10, "France": 9, "Argentina": 8, "Portugal": 7, "Spain": 6, "England": 5, "Netherlands": 4, "Japan": 3, "Morocco": 2, "Belgium": 1},
+    "Q": {"Spain": 10, "France": 9, "England": 8, "Argentina": 7, "Portugal": 6, "Brazil": 5, "Germany": 4, "Netherlands": 3, "Morocco": 2, "Japan": 1},
+    "R": {"Japan": 10, "Portugal": 9, "Argentina": 8, "Mexico": 7, "United States": 6, "Brazil": 5, "Spain": 4, "France": 3, "Colombia": 2, "Switzerland": 1}
+  },
+  "outliers": {
+    "F": {"Spain": 10, "Germany": 9, "Netherlands": 8, "Belgium": 7, "Croatia": 6, "Argentina": 5, "Senegal": 4, "Portugal": 3, "Ecuador": 2, "Bosnia-Herzegovina": 1}
+  },
+  "outliers_note": "F is a known contrarian who picks surprising teams and occasionally wins big. Counted as a known competitor, but DELIBERATELY excluded from the popularity prior for the still-unknown players (do NOT assume the rest pick like F).",
+  "display_names": {"A": "Ryuzo", "B": "Daisuke", "C": "Kumiko", "D": "Reiko", "E": "Taro", "F": "Sumie", "G": "Asako", "H": "Kohei", "I": "Jiro", "J": "Hiroko", "K": "Shunya", "L": "Haruka・Nozomi", "M": "Yoshiaki・Kengo", "N": "Bunta", "O": "Atsuhiro", "P": "Nanako", "Q": "Seishiro", "R": "Daiji・Ana"},
+  "user_name": "Shinichiro",
+  "user_favorites": ["Portugal", "Japan", "Türkiye", "Switzerland", "Germany"]
+}

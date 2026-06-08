@@ -1,0 +1,234 @@
+{
+  "venues": {
+    "Mexico City": {
+      "altitude_m": 2240,
+      "temp_c": 25,
+      "ac": false,
+      "humid": false
+    },
+    "Guadalajara": {
+      "altitude_m": 1560,
+      "temp_c": 28,
+      "ac": false,
+      "humid": false
+    },
+    "Monterrey": {
+      "altitude_m": 540,
+      "temp_c": 35,
+      "ac": false,
+      "humid": true
+    },
+    "Dallas": {
+      "altitude_m": 139,
+      "temp_c": 36,
+      "ac": true,
+      "humid": false
+    },
+    "Houston": {
+      "altitude_m": 15,
+      "temp_c": 34,
+      "ac": true,
+      "humid": true
+    },
+    "Atlanta": {
+      "altitude_m": 320,
+      "temp_c": 32,
+      "ac": true,
+      "humid": false
+    },
+    "Kansas City": {
+      "altitude_m": 310,
+      "temp_c": 31,
+      "ac": false,
+      "humid": true
+    },
+    "Miami": {
+      "altitude_m": 2,
+      "temp_c": 33,
+      "ac": false,
+      "humid": true
+    },
+    "Los Angeles": {
+      "altitude_m": 96,
+      "temp_c": 28,
+      "ac": false,
+      "humid": false
+    },
+    "San Francisco Bay Area": {
+      "altitude_m": 12,
+      "temp_c": 27,
+      "ac": false,
+      "humid": false
+    },
+    "Seattle": {
+      "altitude_m": 56,
+      "temp_c": 25,
+      "ac": false,
+      "humid": false
+    },
+    "Boston": {
+      "altitude_m": 90,
+      "temp_c": 28,
+      "ac": false,
+      "humid": false
+    },
+    "Philadelphia": {
+      "altitude_m": 12,
+      "temp_c": 31,
+      "ac": false,
+      "humid": true
+    },
+    "New York/New Jersey": {
+      "altitude_m": 7,
+      "temp_c": 30,
+      "ac": false,
+      "humid": false
+    },
+    "Toronto": {
+      "altitude_m": 76,
+      "temp_c": 26,
+      "ac": false,
+      "humid": false
+    },
+    "Vancouver": {
+      "altitude_m": 70,
+      "temp_c": 22,
+      "ac": true,
+      "humid": false
+    }
+  },
+  "group_venues": {
+    "A": [
+      "Mexico City",
+      "Guadalajara",
+      "Monterrey",
+      "Atlanta"
+    ],
+    "B": [
+      "Toronto",
+      "Vancouver",
+      "Los Angeles",
+      "San Francisco Bay Area",
+      "Seattle"
+    ],
+    "C": [
+      "New York/New Jersey",
+      "Boston",
+      "Philadelphia",
+      "Atlanta",
+      "Miami"
+    ],
+    "D": [
+      "Los Angeles",
+      "San Francisco Bay Area",
+      "Seattle",
+      "Vancouver"
+    ],
+    "E": [
+      "Houston",
+      "Philadelphia",
+      "Toronto",
+      "New York/New Jersey",
+      "Kansas City"
+    ],
+    "F": [
+      "Dallas",
+      "Monterrey",
+      "Houston",
+      "Kansas City"
+    ],
+    "G": [
+      "Seattle",
+      "Los Angeles",
+      "Vancouver"
+    ],
+    "H": [
+      "Atlanta",
+      "Miami",
+      "Houston",
+      "Guadalajara"
+    ],
+    "I": [
+      "New York/New Jersey",
+      "Boston",
+      "Philadelphia",
+      "Toronto"
+    ],
+    "J": [
+      "Kansas City",
+      "San Francisco Bay Area",
+      "Dallas"
+    ],
+    "K": [
+      "Houston",
+      "Mexico City",
+      "Guadalajara",
+      "Atlanta",
+      "Miami"
+    ],
+    "L": [
+      "Toronto",
+      "Dallas",
+      "Boston",
+      "Philadelphia",
+      "New York/New Jersey"
+    ]
+  },
+  "knockout_venues": {
+    "73": "Los Angeles",
+    "74": "Boston",
+    "75": "Monterrey",
+    "76": "Houston",
+    "77": "New York/New Jersey",
+    "78": "Dallas",
+    "79": "Mexico City",
+    "80": "Atlanta",
+    "81": "San Francisco Bay Area",
+    "82": "Seattle",
+    "83": "Toronto",
+    "84": "Los Angeles",
+    "85": "Vancouver",
+    "86": "Miami",
+    "87": "Kansas City",
+    "88": "Dallas",
+    "89": "Philadelphia",
+    "90": "Houston",
+    "91": "New York/New Jersey",
+    "92": "Mexico City",
+    "93": "Dallas",
+    "94": "Seattle",
+    "95": "Atlanta",
+    "96": "Vancouver",
+    "97": "Boston",
+    "98": "Los Angeles",
+    "99": "Miami",
+    "100": "Kansas City",
+    "101": "Dallas",
+    "102": "Atlanta",
+    "103": "Miami",
+    "104": "New York/New Jersey"
+  },
+  "high_altitude_teams": [
+    "Mexico",
+    "Ecuador",
+    "Colombia",
+    "Bolivia",
+    "Peru"
+  ],
+  "params": {
+    "k_alt": 40,
+    "alt_threshold_m": 1500,
+    "alt_ref_m": 2240,
+    "alt_cap": 110,
+    "c_heat": 18,
+    "comfort_margin_c": 3,
+    "ac_temp_c": 22,
+    "humid_wbgt_add_c": 3,
+    "heat_cap": 90,
+    "host_adv": 65,
+    "host_bonus": {"United States": 90, "Mexico": 65, "Canada": 65},
+    "host_total_cap": 200,
+    "_note": "k_alt=40 Elo/1000m (modern teams pre-acclimatize; McSharry discounted). Differentiated host bonus per 2026 three-host dilution research; USA highest (all late knockouts at home), Mexico host+Azteca altitude modeled separately, Canada weakest."
+  },
+  "source": "wc2026-venue-altitude workflow; McSharry BMJ2007 + Nassis 2014 + Qatar studies"
+}

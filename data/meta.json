@@ -1,0 +1,17 @@
+{
+  "tournament": "2026 FIFA World Cup",
+  "generated": "2026-06-03",
+  "hosts": ["United States", "Canada", "Mexico"],
+  "n_teams": 48,
+  "sources": {
+    "groups": "Final draw held 2025-12-05; confirmed vs Wikipedia/FIFA",
+    "elo": "eloratings.net World.tsv, as of 2026-06-03",
+    "fifa": "FIFA/Coca-Cola Men's World Ranking via Sofascore, 2026-06-03 (ranks 51+ points approximate)",
+    "odds": "Yahoo Sports all-48-teams outright odds (American->decimal), early June 2026; cross-checked FOX/BetMGM",
+    "bracket": "en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage"
+  },
+  "notes": [
+    "FIFA points for the 11 teams ranked outside top 50 are approximate.",
+    "Third-place->R32 slot assignment in bracket.json approximates FIFA Annex C (495 combinations) via constraint-respecting matching."
+  ]
+}

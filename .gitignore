@@ -1,0 +1,12 @@
+# Python env & caches
+.venv/
+__pycache__/
+*.pyc
+
+# editor / OS
+.DS_Store
+
+# backups & scratch
+*.bak
+report/*.bak
+/tmp/

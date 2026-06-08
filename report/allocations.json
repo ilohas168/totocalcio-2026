@@ -1,0 +1,230 @@
+{
+  "ev": {
+    "P1st": 37.5,
+    "EV_index": 195.5,
+    "picks": [
+      {
+        "pts": 10,
+        "team": "Spain",
+        "ewins": 4.5,
+        "market": 14.0,
+        "field": 8.2
+      },
+      {
+        "pts": 9,
+        "team": "Argentina",
+        "ewins": 3.83,
+        "market": 8.6,
+        "field": 6.0
+      },
+      {
+        "pts": 8,
+        "team": "Brazil",
+        "ewins": 3.65,
+        "market": 8.6,
+        "field": 5.5
+      },
+      {
+        "pts": 7,
+        "team": "Mexico",
+        "ewins": 3.47,
+        "market": 1.2,
+        "field": 1.4
+      },
+      {
+        "pts": 6,
+        "team": "Portugal",
+        "ewins": 3.2,
+        "market": 7.7,
+        "field": 5.5
+      },
+      {
+        "pts": 5,
+        "team": "France",
+        "ewins": 3.14,
+        "market": 14.0,
+        "field": 9.3
+      },
+      {
+        "pts": 4,
+        "team": "Colombia",
+        "ewins": 2.9,
+        "market": 2.1,
+        "field": 0.1
+      },
+      {
+        "pts": 3,
+        "team": "Morocco",
+        "ewins": 2.71,
+        "market": 1.9,
+        "field": 0.4
+      },
+      {
+        "pts": 2,
+        "team": "England",
+        "ewins": 2.7,
+        "market": 10.3,
+        "field": 7.3
+      },
+      {
+        "pts": 1,
+        "team": "Japan",
+        "ewins": 2.67,
+        "market": 1.5,
+        "field": 0.5
+      }
+    ]
+  },
+  "gpp": {
+    "P1st": 38.8,
+    "EV_index": 195.2,
+    "picks": [
+      {
+        "pts": 10,
+        "team": "Spain",
+        "ewins": 4.5,
+        "market": 14.0,
+        "field": 8.2
+      },
+      {
+        "pts": 9,
+        "team": "Argentina",
+        "ewins": 3.83,
+        "market": 8.6,
+        "field": 6.0
+      },
+      {
+        "pts": 8,
+        "team": "Brazil",
+        "ewins": 3.65,
+        "market": 8.6,
+        "field": 5.5
+      },
+      {
+        "pts": 7,
+        "team": "Mexico",
+        "ewins": 3.47,
+        "market": 1.2,
+        "field": 1.4
+      },
+      {
+        "pts": 6,
+        "team": "Portugal",
+        "ewins": 3.2,
+        "market": 7.7,
+        "field": 5.5
+      },
+      {
+        "pts": 5,
+        "team": "Colombia",
+        "ewins": 2.9,
+        "market": 2.1,
+        "field": 0.1
+      },
+      {
+        "pts": 4,
+        "team": "France",
+        "ewins": 3.14,
+        "market": 14.0,
+        "field": 9.3
+      },
+      {
+        "pts": 3,
+        "team": "Morocco",
+        "ewins": 2.71,
+        "market": 1.9,
+        "field": 0.4
+      },
+      {
+        "pts": 2,
+        "team": "Japan",
+        "ewins": 2.67,
+        "market": 1.5,
+        "field": 0.5
+      },
+      {
+        "pts": 1,
+        "team": "Belgium",
+        "ewins": 2.61,
+        "market": 2.3,
+        "field": 1.4
+      }
+    ]
+  },
+  "fan": {
+    "P1st": 33.7,
+    "EV_index": 189.5,
+    "picks": [
+      {
+        "pts": 10,
+        "team": "Spain",
+        "ewins": 4.5,
+        "market": 14.0,
+        "field": 8.2
+      },
+      {
+        "pts": 9,
+        "team": "Argentina",
+        "ewins": 3.83,
+        "market": 8.6,
+        "field": 6.0
+      },
+      {
+        "pts": 8,
+        "team": "Brazil",
+        "ewins": 3.65,
+        "market": 8.6,
+        "field": 5.5
+      },
+      {
+        "pts": 7,
+        "team": "Portugal",
+        "ewins": 3.2,
+        "market": 7.7,
+        "field": 5.5
+      },
+      {
+        "pts": 6,
+        "team": "Mexico",
+        "ewins": 3.47,
+        "market": 1.2,
+        "field": 1.4
+      },
+      {
+        "pts": 5,
+        "team": "Japan",
+        "ewins": 2.67,
+        "market": 1.5,
+        "field": 0.5
+      },
+      {
+        "pts": 4,
+        "team": "Türkiye",
+        "ewins": 2.13,
+        "market": 1.2,
+        "field": 0.0
+      },
+      {
+        "pts": 3,
+        "team": "Colombia",
+        "ewins": 2.9,
+        "market": 2.1,
+        "field": 0.1
+      },
+      {
+        "pts": 2,
+        "team": "Germany",
+        "ewins": 2.52,
+        "market": 5.1,
+        "field": 2.1
+      },
+      {
+        "pts": 1,
+        "team": "Switzerland",
+        "ewins": 2.13,
+        "market": 1.2,
+        "field": 0.0
+      }
+    ]
+  }
+}

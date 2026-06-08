@@ -1,0 +1,7 @@
+{
+  "_comment": "Exact host city for each of the 6 group matches, in PAIRS order [(0,1),(0,2),(0,3),(1,2),(1,3),(2,3)] where 0..3 are the teams in groups.json order. Source: Wikipedia per-group pages + FIFA/ESPN/MLS schedule. Only altitude-relevant (A,K) and host (B,D) groups encoded exactly; other groups fall back to cluster-average venue conditions.",
+  "A": ["Mexico City", "Guadalajara", "Mexico City", "Monterrey", "Atlanta", "Guadalajara"],
+  "B": ["Toronto", "Vancouver", "Vancouver", "Seattle", "Los Angeles", "San Francisco Bay Area"],
+  "D": ["Los Angeles", "Seattle", "Los Angeles", "San Francisco Bay Area", "San Francisco Bay Area", "Vancouver"],
+  "K": ["Houston", "Houston", "Miami", "Atlanta", "Guadalajara", "Mexico City"]
+}

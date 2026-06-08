@@ -1,0 +1,47 @@
+{
+  "_comment": "2026 FIFA World Cup bracket structure. Source: en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage. Slots 'X1'=winner group X, 'X2'=runner-up group X. third_from = the best-third-place team coming from one of the listed groups (FIFA Annex C assignment, 495 combinations). 8 third-place slots: matches 74,77,79,80,81,82,85,87.",
+  "r32": [
+    {"match": 73, "home": "A2", "away": "B2"},
+    {"match": 74, "home": "E1", "away": {"third_from": ["A", "B", "C", "D", "F"]}},
+    {"match": 75, "home": "F1", "away": "C2"},
+    {"match": 76, "home": "C1", "away": "F2"},
+    {"match": 77, "home": "I1", "away": {"third_from": ["C", "D", "F", "G", "H"]}},
+    {"match": 78, "home": "E2", "away": "I2"},
+    {"match": 79, "home": "A1", "away": {"third_from": ["C", "E", "F", "H", "I"]}},
+    {"match": 80, "home": "L1", "away": {"third_from": ["E", "H", "I", "J", "K"]}},
+    {"match": 81, "home": "D1", "away": {"third_from": ["B", "E", "F", "I", "J"]}},
+    {"match": 82, "home": "G1", "away": {"third_from": ["A", "E", "H", "I", "J"]}},
+    {"match": 83, "home": "K2", "away": "L2"},
+    {"match": 84, "home": "H1", "away": "J2"},
+    {"match": 85, "home": "B1", "away": {"third_from": ["E", "F", "G", "I", "J"]}},
+    {"match": 86, "home": "J1", "away": "H2"},
+    {"match": 87, "home": "K1", "away": {"third_from": ["D", "E", "I", "J", "L"]}},
+    {"match": 88, "home": "D2", "away": "G2"}
+  ],
+  "third_place_slots": [74, 77, 79, 80, 81, 82, 85, 87],
+  "knockout": {
+    "89": [73, 75],
+    "90": [74, 77],
+    "91": [76, 78],
+    "92": [79, 80],
+    "93": [83, 84],
+    "94": [81, 82],
+    "95": [86, 88],
+    "96": [85, 87],
+    "97": [89, 90],
+    "98": [93, 94],
+    "99": [91, 92],
+    "100": [95, 96],
+    "101": [97, 98],
+    "102": [99, 100],
+    "104": [101, 102]
+  },
+  "third_place_match": {"103": [101, 102]},
+  "rounds": {
+    "R32": [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88],
+    "R16": [89, 90, 91, 92, 93, 94, 95, 96],
+    "QF": [97, 98, 99, 100],
+    "SF": [101, 102],
+    "F": [104]
+  }
+}

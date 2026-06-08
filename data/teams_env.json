@@ -1,0 +1,242 @@
+{
+  "Mexico": {
+    "home_alt_m": 2240,
+    "climate_norm_c": 25,
+    "altitude_team": true
+  },
+  "South Africa": {
+    "home_alt_m": 1750,
+    "climate_norm_c": 22,
+    "altitude_team": false
+  },
+  "South Korea": {
+    "home_alt_m": 38,
+    "climate_norm_c": 29,
+    "altitude_team": false
+  },
+  "Czechia": {
+    "home_alt_m": 200,
+    "climate_norm_c": 21,
+    "altitude_team": false
+  },
+  "Canada": {
+    "home_alt_m": 100,
+    "climate_norm_c": 21,
+    "altitude_team": false
+  },
+  "Bosnia-Herzegovina": {
+    "home_alt_m": 500,
+    "climate_norm_c": 24,
+    "altitude_team": false
+  },
+  "Qatar": {
+    "home_alt_m": 10,
+    "climate_norm_c": 38,
+    "altitude_team": false
+  },
+  "Switzerland": {
+    "home_alt_m": 400,
+    "climate_norm_c": 20,
+    "altitude_team": false
+  },
+  "Brazil": {
+    "home_alt_m": 500,
+    "climate_norm_c": 28,
+    "altitude_team": false
+  },
+  "Morocco": {
+    "home_alt_m": 150,
+    "climate_norm_c": 29,
+    "altitude_team": false
+  },
+  "Haiti": {
+    "home_alt_m": 50,
+    "climate_norm_c": 31,
+    "altitude_team": false
+  },
+  "Scotland": {
+    "home_alt_m": 50,
+    "climate_norm_c": 16,
+    "altitude_team": false
+  },
+  "United States": {
+    "home_alt_m": 150,
+    "climate_norm_c": 28,
+    "altitude_team": false
+  },
+  "Paraguay": {
+    "home_alt_m": 130,
+    "climate_norm_c": 27,
+    "altitude_team": false
+  },
+  "Australia": {
+    "home_alt_m": 30,
+    "climate_norm_c": 24,
+    "altitude_team": false
+  },
+  "Türkiye": {
+    "home_alt_m": 200,
+    "climate_norm_c": 29,
+    "altitude_team": false
+  },
+  "Germany": {
+    "home_alt_m": 150,
+    "climate_norm_c": 20,
+    "altitude_team": false
+  },
+  "Curaçao": {
+    "home_alt_m": 10,
+    "climate_norm_c": 31,
+    "altitude_team": false
+  },
+  "Ivory Coast": {
+    "home_alt_m": 50,
+    "climate_norm_c": 30,
+    "altitude_team": false
+  },
+  "Ecuador": {
+    "home_alt_m": 2850,
+    "climate_norm_c": 18,
+    "altitude_team": true
+  },
+  "Netherlands": {
+    "home_alt_m": 5,
+    "climate_norm_c": 19,
+    "altitude_team": false
+  },
+  "Japan": {
+    "home_alt_m": 40,
+    "climate_norm_c": 30,
+    "altitude_team": false
+  },
+  "Sweden": {
+    "home_alt_m": 20,
+    "climate_norm_c": 19,
+    "altitude_team": false
+  },
+  "Tunisia": {
+    "home_alt_m": 10,
+    "climate_norm_c": 32,
+    "altitude_team": false
+  },
+  "Belgium": {
+    "home_alt_m": 40,
+    "climate_norm_c": 19,
+    "altitude_team": false
+  },
+  "Egypt": {
+    "home_alt_m": 75,
+    "climate_norm_c": 33,
+    "altitude_team": false
+  },
+  "Iran": {
+    "home_alt_m": 1200,
+    "climate_norm_c": 33,
+    "altitude_team": false
+  },
+  "New Zealand": {
+    "home_alt_m": 20,
+    "climate_norm_c": 16,
+    "altitude_team": false
+  },
+  "Spain": {
+    "home_alt_m": 660,
+    "climate_norm_c": 28,
+    "altitude_team": false
+  },
+  "Cape Verde": {
+    "home_alt_m": 20,
+    "climate_norm_c": 27,
+    "altitude_team": false
+  },
+  "Saudi Arabia": {
+    "home_alt_m": 600,
+    "climate_norm_c": 38,
+    "altitude_team": false
+  },
+  "Uruguay": {
+    "home_alt_m": 40,
+    "climate_norm_c": 21,
+    "altitude_team": false
+  },
+  "France": {
+    "home_alt_m": 80,
+    "climate_norm_c": 21,
+    "altitude_team": false
+  },
+  "Senegal": {
+    "home_alt_m": 20,
+    "climate_norm_c": 30,
+    "altitude_team": false
+  },
+  "Iraq": {
+    "home_alt_m": 34,
+    "climate_norm_c": 40,
+    "altitude_team": false
+  },
+  "Norway": {
+    "home_alt_m": 20,
+    "climate_norm_c": 18,
+    "altitude_team": false
+  },
+  "Argentina": {
+    "home_alt_m": 25,
+    "climate_norm_c": 24,
+    "altitude_team": false
+  },
+  "Algeria": {
+    "home_alt_m": 250,
+    "climate_norm_c": 31,
+    "altitude_team": false
+  },
+  "Austria": {
+    "home_alt_m": 300,
+    "climate_norm_c": 21,
+    "altitude_team": false
+  },
+  "Jordan": {
+    "home_alt_m": 800,
+    "climate_norm_c": 32,
+    "altitude_team": false
+  },
+  "Portugal": {
+    "home_alt_m": 100,
+    "climate_norm_c": 25,
+    "altitude_team": false
+  },
+  "Congo DR": {
+    "home_alt_m": 300,
+    "climate_norm_c": 29,
+    "altitude_team": false
+  },
+  "Uzbekistan": {
+    "home_alt_m": 480,
+    "climate_norm_c": 33,
+    "altitude_team": false
+  },
+  "Colombia": {
+    "home_alt_m": 2640,
+    "climate_norm_c": 24,
+    "altitude_team": true
+  },
+  "England": {
+    "home_alt_m": 50,
+    "climate_norm_c": 19,
+    "altitude_team": false
+  },
+  "Croatia": {
+    "home_alt_m": 130,
+    "climate_norm_c": 26,
+    "altitude_team": false
+  },
+  "Ghana": {
+    "home_alt_m": 60,
+    "climate_norm_c": 31,
+    "altitude_team": false
+  },
+  "Panama": {
+    "home_alt_m": 30,
+    "climate_norm_c": 31,
+    "altitude_team": false
+  }
+}
