@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOTOCALCIO 2026 — 家族ワールドカッププール</title>
+<title>TOTOCALCIO 2026 — 予想ダッシュボード</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -489,7 +489,7 @@ body.noscroll{overflow:hidden}
     <button class="tab active" data-v="home">🏠 ホーム</button>
     <button class="tab" data-v="schedule">📅 日程</button>
     <button class="tab" data-v="results">📊 結果</button>
-    <button class="tab" data-v="ai">👥 参加者評価</button>
+    <button class="tab" data-v="ai">🤖 AI予想・評価</button>
   </div>
 </nav>
 
@@ -521,7 +521,7 @@ body.noscroll{overflow:hidden}
 
   <section id="flow">
     <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Point Swings · Cheat Sheet</div><h2>全員の得失点早見表</h2></div>
-      <div class="note">各国が<b>1勝するごと</b>に全員の点がどう動くか（19人 × 各国）。<span class="pos">緑＝もらう</span> / <span class="neg">赤＝払う</span>。横スクロール可。名前を<b>クリックで個人詳細</b>。</div></div>
+      <div class="note">各国が<b>1勝するごと</b>に全員の点がどう動くか（19人 × 各国）。<span class="pos">緑＝もらう</span> / <span class="neg">赤＝払う</span>。列は期待勝利数順・横スクロール可。名前を<b>クリックで個人詳細</b>。</div></div>
     <div class="tbl-wrap"><table id="matTbl"></table></div>
   </section>
 
@@ -534,7 +534,7 @@ body.noscroll{overflow:hidden}
   <div class="ctarow">
     <button class="ctabtn" data-v="schedule"><span class="ic">📅</span><div><b>対戦スケジュール</b><span>全104試合 / 3タイムゾーン</span></div><span class="ar">→</span></button>
     <button class="ctabtn" data-v="results"><span class="ic">📊</span><div><b>結果</b><span>グループ表 / トーナメント結果</span></div><span class="ar">→</span></button>
-    <button class="ctabtn" data-v="ai"><span class="ic">👥</span><div><b>参加者評価</b><span>各自のベスト／ワーストケース</span></div><span class="ar">→</span></button>
+    <button class="ctabtn" data-v="ai"><span class="ic">🤖</span><div><b>AI予想・参加者評価</b><span>優勝確率 / 各自の評価 / モデル</span></div><span class="ar">→</span></button>
   </div>
   </div>
 
@@ -573,16 +573,52 @@ body.noscroll{overflow:hidden}
   <div class="view" id="v-ai" hidden>
   <section id="rivals">
     <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">The 19-Player Pool</div><h2>参加者評価</h2></div>
-      <div class="note">各自の配点での、最も有利／不利な展開での通算得失点。名前を<b>クリックで個人詳細</b>。</div></div>
+      <div class="note">全19人の確定フィールドで評価（相手の推測なし）。平均/ベスト/ワースト/分布＝全シミュレーションの合計点。</div></div>
     <div class="tbl-wrap">
-    <table id="rivalTbl"><thead><tr><th style="text-align:left">参加者</th><th>ベスト</th><th>ワースト</th></tr></thead><tbody id="rivalBody"></tbody></table>
+    <table id="rivalTbl"><thead><tr><th style="text-align:left">参加者</th><th style="text-align:left">P(0点以上)</th><th>平均</th><th>ベスト</th><th>ワースト</th><th style="text-align:left">分布 5–95% ・中央</th><th style="text-align:left">予想の特徴</th></tr></thead><tbody id="rivalBody"></tbody></table>
     </div>
+  </section>
+
+  <section id="groups">
+    <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Final Standings</div><h2>グループ最終順位予想</h2></div>
+      <div class="note"><span style="color:var(--mex)">●</span> 進出予想（上位2）。％＝進出確率。</div></div>
+    <div class="ggrid" id="ggrid"></div>
+  </section>
+
+  <section id="odds">
+    <div class="shead"><div class="num">03</div><div class="tt"><div class="ek">Road to the Final</div><h2>勝ち上がり・優勝確率（上位16）</h2></div>
+      <div class="note">各ラウンド到達確率。<span style="color:var(--gold)">金＝優勝確率</span>。</div></div>
+    <div class="tbl-wrap">
+    <table id="oddsTbl"><thead><tr><th style="text-align:left">国 / Nation</th><th>R16</th><th>準々</th><th>準決</th><th>決勝</th><th>優勝</th></tr></thead><tbody><tr><td class="l">Spain</td><td data-o="74">74</td><td data-o="51">51</td><td data-o="39">39</td><td data-o="26">26</td><td data-o="19" data-champ>19</td></tr><tr><td class="l">Argentina</td><td data-o="64">64</td><td data-o="45">45</td><td data-o="29">29</td><td data-o="19">19</td><td data-o="10" data-champ>10</td></tr><tr><td class="l">Brazil</td><td data-o="61">61</td><td data-o="43">43</td><td data-o="27">27</td><td data-o="15">15</td><td data-o="9" data-champ>9</td></tr><tr><td class="l">France</td><td data-o="61">61</td><td data-o="40">40</td><td data-o="24">24</td><td data-o="15">15</td><td data-o="8" data-champ>8</td></tr><tr><td class="l">Portugal</td><td data-o="59">59</td><td data-o="35">35</td><td data-o="20">20</td><td data-o="12">12</td><td data-o="6" data-champ>6</td></tr><tr><td class="l">England</td><td data-o="54">54</td><td data-o="30">30</td><td data-o="17">17</td><td data-o="10">10</td><td data-o="5" data-champ>5</td></tr><tr><td class="l">Morocco</td><td data-o="47">47</td><td data-o="29">29</td><td data-o="16">16</td><td data-o="7">7</td><td data-o="4" data-champ>4</td></tr><tr><td class="l">Japan</td><td data-o="44">44</td><td data-o="28">28</td><td data-o="16">16</td><td data-o="7">7</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Colombia</td><td data-o="54">54</td><td data-o="29">29</td><td data-o="15">15</td><td data-o="8">8</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Mexico</td><td data-o="69">69</td><td data-o="40">40</td><td data-o="18">18</td><td data-o="8">8</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Senegal</td><td data-o="48">48</td><td data-o="25">25</td><td data-o="13">13</td><td data-o="6">6</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Germany</td><td data-o="50">50</td><td data-o="25">25</td><td data-o="13">13</td><td data-o="6">6</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Netherlands</td><td data-o="42">42</td><td data-o="24">24</td><td data-o="12">12</td><td data-o="6">6</td><td data-o="3" data-champ>3</td></tr><tr><td class="l">Croatia</td><td data-o="47">47</td><td data-o="22">22</td><td data-o="11">11</td><td data-o="5">5</td><td data-o="2" data-champ>2</td></tr><tr><td class="l">Türkiye</td><td data-o="45">45</td><td data-o="23">23</td><td data-o="11">11</td><td data-o="5">5</td><td data-o="2" data-champ>2</td></tr><tr><td class="l">United States</td><td data-o="49">49</td><td data-o="25">25</td><td data-o="11">11</td><td data-o="5">5</td><td data-o="2" data-champ>2</td></tr></tbody></table>
+    </div>
+  </section>
+
+  <section id="bracket">
+    <div class="shead"><div class="num">09</div><div class="tt"><div class="ek">Knockout</div><h2>予想決勝トーナメント</h2></div>
+      <div class="note">各スロット＝最頻チーム、ハイライト＝予想勝者。左R32→右決勝、横スクロール可。</div></div>
+    <details class="acc"><summary>展開して表示 <span class="ek">Expand to view</span></summary>
+      <div class="body" style="padding:6px 2px 2px"><div class="bkt" id="bkt"></div></div>
+    </details>
+  </section>
+
+  <section id="model">
+    <div class="shead"><div class="num">05</div><div class="tt"><div class="ek">The Math</div><h2>モデルと数学</h2></div></div>
+    <details class="acc"><summary>強度・会場・相手モデル <span class="ek">Strength · Venue · Opponents</span></summary>
+      <div class="body"><ul>
+        <li>強度 = Elo × ブックメーカー優勝オッズ × FIFAランク（標準化ブレンド 0.35/0.45/0.20）。</li>
+        <li>試合 = レーティング差→得点ポアソン。グループのタイブレーク（勝点→得失点→総得点）再現。</li>
+        <li>標高 = 差1000mあたり40Elo（Mexico City 2240m / Guadalajara 1560mのみ発火、McSharry BMJ2007）。メキシコは3戦全て標高。</li>
+        <li>暑熱 = 気候適応差1℃あたり18Elo（屋根+AC会場は無効、Nassis 2014）。</li>
+        <li>開催地 = USA +90 / メキシコ +65（＋アステカ標高）/ カナダ +65（3共催で希薄化）。</li>
+        <li>相手モデル = 全19人の予想が確定（締切後）＝相手を推測する不確実性なし。試合結果のみがランダム。較正：sim優勝確率≈市場（スペイン≈14%、Spearman≈0.91）。</li>
+      </ul></div>
+    </details>
   </section>
   </div>
 
   <div class="foot">
-    <span>TOTOCALCIO 2026 · 家族ワールドカッププール</span>
-    <span>FIFA WORLD CUP 2026 · 19 PLAYERS · ZERO-SUM</span>
+    <span>TOTOCALCIO 2026 · 予想ダッシュボード</span>
+    <span>150,000× MONTE CARLO · GENERATED 2026-06-06</span>
   </div>
 
 </div>
@@ -590,6 +626,7 @@ body.noscroll{overflow:hidden}
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modalbox">
   <div class="modalhead"><span class="mt" id="modalTitle"></span><button class="modalx" onclick="closeModal()">×</button></div>
   <div class="flowstat" id="modalStat"></div>
+  <div class="pgraph" id="modalGraph"></div>
   <div class="mdlegend"><b style="color:var(--gold2)">金の縦線＝配点した国</b> ・「1勝」＝その国が1勝した時の増減（行クリックで日程）</div><div class="mdlist" id="modalBody"></div>
 </div></div>
 
@@ -618,9 +655,50 @@ document.querySelectorAll('#oddsTbl td[data-o]').forEach(td=>{
   td.innerHTML=`<div class="oddsbar${champ?' champ':''}"><div class="of" style="--w:${Math.min(100,v*1.05)}%"></div><span class="ov">${v}%</span></div>`;
 });
 
-// (group prediction removed — no-AI version)
+// GROUPS
+const G={
+A:[["Mexico", 70, 21, 97, 1], ["South Korea", 17, 39, 74, 1], ["Czechia", 8, 25, 57, 1], ["South Africa", 4, 15, 36, 0]],
+B:[["Canada", 38, 30, 84, 1], ["Switzerland", 34, 29, 81, 1], ["Bosnia-Herzegovina", 19, 25, 66, 1], ["Qatar", 8, 16, 42, 0]],
+C:[["Brazil", 62, 30, 97, 1], ["Morocco", 33, 47, 91, 1], ["Scotland", 3, 13, 39, 0], ["Haiti", 2, 10, 30, 0]],
+D:[["United States", 41, 28, 84, 1], ["Türkiye", 29, 29, 76, 1], ["Paraguay", 17, 24, 62, 1], ["Australia", 12, 19, 51, 0]],
+E:[["Germany", 42, 29, 87, 1], ["Ivory Coast", 28, 30, 78, 1], ["Ecuador", 25, 29, 75, 1], ["Curaçao", 5, 12, 32, 0]],
+F:[["Japan", 48, 28, 89, 1], ["Netherlands", 30, 32, 79, 1], ["Tunisia", 12, 22, 56, 0], ["Sweden", 9, 18, 46, 0]],
+G:[["Belgium", 43, 31, 90, 1], ["Iran", 28, 32, 82, 1], ["Egypt", 27, 31, 82, 1], ["New Zealand", 2, 6, 18, 0]],
+H:[["Spain", 82, 15, 99, 1], ["Uruguay", 13, 47, 77, 1], ["Saudi Arabia", 3, 20, 42, 0], ["Cape Verde", 2, 18, 38, 0]],
+I:[["France", 45, 30, 89, 1], ["Senegal", 34, 33, 83, 1], ["Norway", 15, 24, 61, 0], ["Iraq", 6, 14, 37, 0]],
+J:[["Argentina", 73, 19, 97, 1], ["Algeria", 13, 34, 67, 1], ["Austria", 9, 28, 57, 1], ["Jordan", 5, 20, 43, 0]],
+K:[["Portugal", 50, 35, 94, 1], ["Colombia", 43, 41, 94, 1], ["Congo DR", 4, 12, 37, 1], ["Uzbekistan", 3, 11, 35, 0]],
+L:[["Croatia", 42, 31, 87, 1], ["England", 40, 32, 86, 1], ["Panama", 11, 21, 54, 1], ["Ghana", 7, 16, 42, 0]]
+};
+const gg=document.getElementById('ggrid');
+for(const k in G){
+  const c=document.createElement('div');c.className='gcard';
+  let rows='';
+  for(const [nm,p1,p2,adv,q] of G[k]){
+    rows+=`<div class="grow${q?' qual':''}"><span class="q"></span><span class="gnm"><span class="flag">${FLAGS[nm]||''}</span><span class="tnm">${nm}</span></span><span class="adv">${adv}%</span><span class="gbar" style="--w:${adv}%"></span></div>`;
+  }
+  c.innerHTML=`<div class="gh"><span class="gl">GROUP <em>${k}</em></span><span class="hint">進出確率</span></div>${rows}`;
+  gg.appendChild(c);
+}
 
-// (predicted bracket removed — no-AI version)
+// BRACKET
+const BK=[["R32", [["South Korea", "Canada", 0], ["Japan", "Morocco", 0], ["Germany", "Czechia", 0], ["France", "Paraguay", 0], ["Colombia", "England", 0], ["Spain", "Algeria", 0], ["United States", "Bosnia-Herzegovina", 0], ["Belgium", "Austria", 0], ["Brazil", "Netherlands", 0], ["Ivory Coast", "Senegal", 1], ["Mexico", "Ecuador", 0], ["Croatia", "Congo DR", 0], ["Argentina", "Uruguay", 0], ["Türkiye", "Iran", 0], ["Switzerland", "Egypt", 0], ["Portugal", "Panama", 0]]], ["R16", [["South Korea", "Japan", 1], ["Germany", "France", 1], ["Colombia", "Spain", 1], ["United States", "Belgium", 0], ["Brazil", "Senegal", 0], ["Mexico", "Croatia", 0], ["Argentina", "Türkiye", 0], ["Switzerland", "Portugal", 1]]], ["準々", [["Japan", "France", 1], ["Spain", "United States", 0], ["Brazil", "Mexico", 0], ["Argentina", "Portugal", 0]]], ["準決", [["France", "Spain", 1], ["Brazil", "Argentina", 1]]], ["決勝", [["Spain", "Argentina", 0]]]];
+const CODE={"South Korea":"KOR","United States":"USA","Ivory Coast":"CIV","Congo DR":"COD","Bosnia-Herzegovina":"BIH","Türkiye":"TUR","Czechia":"CZE","Netherlands":"NED","Switzerland":"SUI","Croatia":"CRO","Germany":"GER","Portugal":"POR","Uruguay":"URU","Paraguay":"PAR","Senegal":"SEN","England":"ENG","Algeria":"ALG","Austria":"AUT","Panama":"PAN","Ecuador":"ECU","Morocco":"MAR","Colombia":"COL","Belgium":"BEL","Argentina":"ARG","Brazil":"BRA","Mexico":"MEX","France":"FRA","Spain":"ESP","Japan":"JPN","Canada":"CAN","Iran":"IRN","Egypt":"EGY"};
+function bcode(nm){if(CODE[nm])return CODE[nm];return (nm||'').replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,3);}
+const bkt=document.getElementById('bkt');
+for(const [rn,mts] of BK){
+  const col=document.createElement('div');col.className='rnd';
+  let h=`<div class="rname">${rn}</div><div class="rmatches">`;
+  for(const [a,b,win] of mts){
+    h+=`<div class="mt"><div class="tm${win===0?' win':''}"><span class="fl">${FLAGS[a]||''}</span><span class="cd">${bcode(a)}</span></div><div class="tm${win===1?' win':''}"><span class="fl">${FLAGS[b]||''}</span><span class="cd">${bcode(b)}</span></div></div>`;
+  }
+  h+=`</div>`;
+  col.innerHTML=h;bkt.appendChild(col);
+}
+// champion card
+const cc=document.createElement('div');cc.className='champcard';
+cc.innerHTML=`<div class="lab">予想優勝</div><div class="ico">🏆</div><div class="cn"><span class="flag" style="font-size:28px">🇪🇸</span><br>Spain</div><div class="pct">優勝確率 19% · 決勝 vs 🇦🇷 Argentina</div>`;
+bkt.appendChild(cc);
 
 // reveal animations
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
@@ -661,22 +739,26 @@ function flowCell(v){
 function openModal(key){
   const d=FLOW[key]; if(!d) return;
   document.getElementById('modalTitle').textContent=key;
-  const rows=d.rows.slice().sort((a,b)=>(b[2]-a[2])||a[0].localeCompare(b[0]));   // 配点 desc, then name
+  const rows=d.rows.slice().sort((a,b)=>(b[2]-a[2])||(b[1]-a[1]));   // 配点 desc, then 期待勝利数
   let mh='', divShown=false;
   rows.forEach(r=>{
     const nm=r[0],ew=r[1],pts=r[2],oth=r[3],pw=r[4],tot=r[5];
     if(pts===0&&!divShown){ mh+='<div class="mddiv">― 配点なし（勝つと失点するリスク国）―</div>'; divShown=true; }
     const cls=pw>0?'pos':(pw<0?'neg':'zero');
     mh+=`<div class="mditem ${pts>0?'pick':'nopt'}" onclick="openCountry('${esc(nm)}')">`+
-      `<div class="mdc"><span class="flag">${FLAGS[nm]||''}</span><span class="mdnm">${nm}</span></div>`+
+      `<div class="mdc"><span class="flag">${FLAGS[nm]||''}</span><span class="mdnm">${nm}</span>`+
+      `<span class="mdmeta">期待${ew.toFixed(2)}・通算${tot>=0?'+':''}${tot}</span></div>`+
       `<div class="mdpts">配点 <b>${pts||0}</b></div>`+
       `<div class="mdpw ${cls}">${pw>0?'+':''}${pw}</div></div>`;
   });
   document.getElementById('modalBody').innerHTML=mh;
   const s=d.stats;
   document.getElementById('modalStat').innerHTML=
+    `<span>平均 <b class="${s.mean>=0?'pos':'neg'}">${fmtSigned(s.mean)}</b></span>`+
     `<span>ベスト <b class="pos">${fmtSigned(s.best)}</b></span>`+
-    `<span>ワースト <b class="neg">${fmtSigned(s.worst)}</b></span>`;
+    `<span>ワースト <b class="neg">${fmtSigned(s.worst)}</b></span>`+
+    `<span>P(0点以上) <b>${s.pos}%</b></span>`;
+  document.getElementById('modalGraph').innerHTML=pgraph(s);
   document.getElementById('modal').classList.add('open');
   document.body.classList.add('noscroll');   // lock background scroll
 }
@@ -688,7 +770,7 @@ function pgraph(s){
   const lo=Math.min(s.worst,0), hi=Math.max(s.best,0), span=(hi-lo)||1;
   const X=v=>Math.max(0,Math.min(100,(v-lo)/span*100));
   const z=X(0),q5=X(s.p5),q25=X(s.p25),md=X(s.median),q75=X(s.p75),q95=X(s.p95);
-  return `<div class="pgcap">📊 合計点の分布</div>`+
+  return `<div class="pgcap">📊 合計点の分布（全シミュレーション）</div>`+
     `<div class="pgaxis">`+
       `<div class="pgneg" style="width:${z}%"></div><div class="pgpos" style="left:${z}%"></div>`+
       `<div class="pgwk"></div>`+
@@ -717,14 +799,13 @@ function matCell(v){
 }
 (function(){
   const t=document.getElementById('matTbl'); if(!t||!MATRIX.countries) return;
-  const ord=MATRIX.countries.map((c,i)=>i).sort((a,b)=>MATRIX.countries[a].nm.localeCompare(MATRIX.countries[b].nm));
   let head='<thead><tr><th style="text-align:left">参加者＼国</th>';
-  ord.forEach(i=>{const c=MATRIX.countries[i];head+=`<th class="cty" title="${c.nm}">${FLAGS[c.nm]||c.nm.slice(0,3)}</th>`;});
+  MATRIX.countries.forEach(c=>{head+=`<th class="cty" title="${c.nm} · 期待勝利数 ${c.ew}">${FLAGS[c.nm]||c.nm.slice(0,3)}</th>`;});
   head+='</tr></thead><tbody>';
   let body='';
   MATRIX.rows.forEach(r=>{
     body+=`<tr><td class="l" onclick="openModal('${r.name}')">${r.name} ›</td>`;
-    ord.forEach(i=>{body+=matCell(r.pw[i]);});
+    r.pw.forEach(v=>{body+=matCell(v);});
     body+='</tr>';
   });
   t.innerHTML=head+body+'</tbody>';
@@ -748,13 +829,18 @@ const RIVDOM=[-2707,2255];
       `<div class="bxbox" style="left:${b1}%;width:${Math.max(1.2,b2-b1)}%"></div>`+
       `<div class="med" style="left:${md}%"></div></div>`;
   }
-  RIVALS.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(r=>{
+  RIVALS.forEach(r=>{
     const tr=document.createElement('tr');
     const lab=r.name;
+    const mc=r.mean>=0?'pos':'neg';
     tr.innerHTML=
       `<td class="l" onclick="openModal(&#39;${lab}&#39;)">${lab} ›</td>`+
+      `<td class="barcell"><span class="v">${r.pos}%</span><div class="track"><div class="fill" style="--w:${r.pos}%"></div></div></td>`+
+      `<td class="${mc}">${sg(r.mean)}</td>`+
       `<td class="pos">${sg(r.best)}</td>`+
-      `<td class="neg">${sg(r.worst)}</td>`;
+      `<td class="neg">${sg(r.worst)}</td>`+
+      `<td>${bx(r)}</td>`+
+      `<td class="diag">${r.diag}</td>`;
     body.appendChild(tr);
   });
 })();
@@ -781,7 +867,7 @@ function renderStandings(){
     : `⚽️ <b>大会開始前</b>。全員0点。<b>6/11開幕</b>後、試合結果を自動反映して順位が動きます。`;
   const medal=['🥇','🥈','🥉'];
   let h='';
-  STANDINGS.slice().sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).forEach((r,i)=>{
+  STANDINGS.forEach((r,i)=>{
     const rk=i+1, top=rk<=3, cls=['lbrow']; if(top)cls.push('podium','top'+rk); if(r.you)cls.push('you');
     const sc=r.score, sg=(sc>=0?'+':'')+sc;
     const nm=r.name;
@@ -871,7 +957,7 @@ function renderCountry(){
   const c=(typeof MATRIX!=='undefined'&&MATRIX.countries||[]).find(x=>x.nm===nm);
   document.getElementById('cmSub').innerHTML=
     (_p?`<b style="color:var(--gold2)">${_w}勝${_d}分${_l}敗</b> 得失点${_gf-_ga>=0?'+':''}${_gf-_ga}（${_gf}-${_ga}） · `:'')
-    +`全${ms.length}試合`;
+    +(c?`期待勝利数 ${c.ew} · `:'')+`全${ms.length}試合`;
   let h='';
   ms.forEach(m=>{ h+=`<div class="dayhd" style="position:static;border:none;padding:8px 2px 4px;margin:0">${fmtD(m.utc,zone)}</div>`+matchRow(m,zone); });
   document.getElementById('cmBody').innerHTML=h||'<div class="lbnote">日程未定。</div>';
