@@ -452,20 +452,24 @@ body.noscroll{overflow:hidden}
 .ctabtn>div span{font-size:12px;color:var(--muted)}
 .ctabtn .ar{font-family:var(--disp);font-size:24px;color:var(--gold);flex:none}
 
-/* ===== knockout results ===== */
-.kolist{display:flex;flex-direction:column;gap:13px}
-.koround{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 15px}
-.korh{font-family:var(--cond);text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-size:13px;color:var(--gold2);margin-bottom:6px}
-.korn{color:var(--faint);font-size:11px;margin-left:6px;font-weight:400}
-.korow{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center;padding:7px 2px;border-top:1px solid var(--line)}
-.korow:first-of-type{border-top:none}
-.kot{font-family:var(--mono);font-size:11px;color:var(--faint)}
-.koteams{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:14px}
-.koteams .tm{display:inline-flex;align-items:center;gap:5px;cursor:pointer}.koteams .tm:hover{color:var(--gold2)}
-.koteams .tm.tbd{color:var(--faint);cursor:default}
-.koteams .win{font-weight:800;color:var(--gold2)}
-.koteams .vs{color:var(--faint);font-size:11px;font-family:var(--mono)}
-.koteams .mscore{font-family:var(--mono);font-weight:700}.koteams .mscore .pen{color:var(--faint);font-size:11px;font-weight:400}
+/* ===== next-3 tz toggle ===== */
+.n3tz{display:flex;gap:5px;margin-left:auto;align-self:center}
+.n3tzb{font-family:var(--cond);text-transform:uppercase;letter-spacing:.03em;font-weight:700;font-size:11px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);background:var(--surface);color:var(--muted);cursor:pointer}
+.n3tzb.on{background:var(--gold);color:#1a1304;border-color:var(--gold)}
+@media(max-width:680px){.n3head{flex-wrap:wrap}.n3tz{margin-left:0;width:100%}}
+/* ===== knockout bracket (compact graph) ===== */
+.kobr{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px;align-items:stretch}
+.kocol{display:flex;flex-direction:column;min-width:90px;flex:none}
+.kocolh{font-family:var(--cond);text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:11px;color:var(--gold2);text-align:center;margin-bottom:8px}
+.kocn{color:var(--faint);font-size:9px;margin-left:4px}
+.kocells{display:flex;flex-direction:column;justify-content:space-around;flex:1;gap:6px}
+.kocell{display:flex;align-items:center;justify-content:center;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 7px}
+.kocell:hover{border-color:var(--line2)}
+.kf{font-size:17px;cursor:pointer;opacity:.9;filter:grayscale(.25)}
+.kf.w{filter:none;opacity:1;text-shadow:0 0 9px rgba(246,196,81,.65)}
+.kf.tbd{opacity:.3;cursor:default;filter:none}
+.ks{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--txt);min-width:30px;text-align:center}
+.ks.tbd{color:var(--faint);font-weight:400}
 </style>
 </head>
 <body>
@@ -485,8 +489,6 @@ body.noscroll{overflow:hidden}
   <header class="hero">
     <div class="kicker">FIFA World Cup 26 · Family Pool · Zero-Sum</div>
     <h1 class="wordmark"><span class="toto">Totocalcio</span> <span class="yr">2026</span></h1>
-    <p class="lede">予想ダッシュボード &nbsp;·&nbsp; 生成 <b>2026-06-06</b> &nbsp;·&nbsp; <b>150,000回</b>モンテカルロ<br>
-    Elo × 市場 × FIFA ＋ 標高 / 暑熱 / 開催地補正 &nbsp;·&nbsp; 家族<b>19人</b>のゼロサム配点ゲーム（全員確定）</p>
   </header>
 
   <div class="ticker"><div class="run">
@@ -496,7 +498,7 @@ body.noscroll{overflow:hidden}
   </div></div>
 
   <section id="next3sec" class="next3sec">
-    <div class="n3head"><span class="ek">Next 3 Matches</span><h3>次の3試合</h3></div>
+    <div class="n3head"><span class="ek">Next 3 Matches</span><h3>次の3試合</h3><div class="n3tz"><button class="n3tzb on" data-tz="jp">日本</button><button class="n3tzb" data-tz="us">米ET</button><button class="n3tzb" data-tz="ch">スイス</button></div></div>
     <div class="n3grid" id="n3"></div>
   </section>
 
@@ -549,7 +551,7 @@ body.noscroll{overflow:hidden}
 
   <section id="koresults">
     <div class="shead"><div class="num">04</div><div class="tt"><div class="ek">Knockout · Live</div><h2>トーナメント結果</h2></div>
-      <div class="note">決勝トーナメントの実際の対戦・結果（R32は6/28〜）。勝者をハイライト。国名クリックで日程。</div></div>
+      <div class="note">決勝トーナメントの実際の対戦・結果（R32は6/28〜）。勝者を金でハイライト・横スクロール可。国旗クリックで日程。</div></div>
     <div class="kolist" id="koBody"></div>
   </section>
   </div>
@@ -832,6 +834,8 @@ const STAGE_JP={GROUP_STAGE:'グループ',LAST_32:'R32',LAST_16:'R16',QUARTER_F
 let tzCur='jp', scStage='all';
 const esc=s=>(''+s).replace(/'/g,"\\'");
 function zoneOf(){return (TZ.find(t=>t.id===tzCur)||TZ[0]).zone;}
+function tzFull(){return {jp:'日本時間',us:'米国時間 ET',ch:'スイス時間'}[tzCur]||'';}
+function setTZ(tz){tzCur=tz;document.querySelectorAll('[data-tz]').forEach(x=>x.classList.toggle('on',x.dataset.tz===tz));renderSchedule();renderKO();renderNext3();}
 function fmtD(utc,zone){return new Date(utc).toLocaleDateString('ja-JP',{timeZone:zone,month:'numeric',day:'numeric',weekday:'short'});}
 function fmtT(utc,zone){return new Date(utc).toLocaleTimeString('en-GB',{timeZone:zone,hour:'2-digit',minute:'2-digit',hour12:false});}
 function dKey(utc,zone){return new Date(utc).toLocaleDateString('en-CA',{timeZone:zone});}
@@ -848,7 +852,7 @@ function renderStandings(){
   STANDINGS.forEach((r,i)=>{
     const rk=i+1, top=rk<=3, cls=['lbrow']; if(top)cls.push('podium','top'+rk); if(r.you)cls.push('you');
     const sc=r.score, sg=(sc>=0?'+':'')+sc;
-    const nm=r.joker?`${r.name} 🃏`:r.name;
+    const nm=r.name;
     h+=`<div class="${cls.join(' ')}" onclick="openModal('${esc(r.name)}')">`+
        `<div class="lbrk">${top?`<span class="lbmedal">${medal[i]}</span>`:rk}</div>`+
        `<div class="lbmid"><span class="lbnm">${nm}</span><span class="lbsub">予想 ${r.mean>=0?'+':''}${r.mean}</span></div>`+
@@ -926,9 +930,14 @@ function openCountry(nm){
   const zone=zoneOf();
   const ms=SCHEDULE.matches.filter(m=>m.home===nm||m.away===nm);
   document.getElementById('cmTitle').innerHTML=`<span class="flag">${FLAGS[nm]||''}</span> ${nm}`;
+  let _w=0,_d=0,_l=0,_gf=0,_ga=0,_p=0;
+  ms.forEach(x=>{ if(x.status==='FINISHED'&&x.score){_p++;
+    const mine=x.home===nm?x.score[0]:x.score[1], opp=x.home===nm?x.score[1]:x.score[0];
+    _gf+=mine;_ga+=opp; if(mine>opp)_w++; else if(mine<opp)_l++; else _d++; } });
   const c=(typeof MATRIX!=='undefined'&&MATRIX.countries||[]).find(x=>x.nm===nm);
-  document.getElementById('cmSub').textContent=
-    (c?`期待勝利数 ${c.ew} · `:'')+`${ms.length}試合（決勝Tは勝ち上がりで追加）`;
+  document.getElementById('cmSub').innerHTML=
+    (_p?`<b style="color:var(--gold2)">${_w}勝${_d}分${_l}敗</b> 得失点${_gf-_ga>=0?'+':''}${_gf-_ga}（${_gf}-${_ga}） · `:'')
+    +(c?`期待勝利数 ${c.ew} · `:'')+`全${ms.length}試合`;
   let h='';
   ms.forEach(m=>{ h+=`<div class="dayhd" style="position:static;border:none;padding:8px 2px 4px;margin:0">${fmtD(m.utc,zone)}</div>`+matchRow(m,zone); });
   document.getElementById('cmBody').innerHTML=h||'<div class="lbnote">日程未定。</div>';
@@ -938,9 +947,7 @@ function closeCountry(){document.getElementById('cmodal').classList.remove('open
 
 // ---- wire controls + initial render ----
 (function(){
-  document.querySelectorAll('#tzbar .tzbtn[data-tz]').forEach(b=>b.onclick=()=>{
-    tzCur=b.dataset.tz; document.querySelectorAll('#tzbar .tzbtn[data-tz]').forEach(x=>x.classList.toggle('on',x===b)); renderSchedule(); renderKO();
-  });
+  document.querySelectorAll('[data-tz]').forEach(b=>b.onclick=()=>setTZ(b.dataset.tz));
   document.querySelectorAll('#tzbar .tzbtn[data-st]').forEach(b=>b.onclick=()=>{
     scStage=b.dataset.st; document.querySelectorAll('#tzbar .tzbtn[data-st]').forEach(x=>x.classList.toggle('on',x===b)); renderSchedule();
   });
@@ -958,12 +965,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCountry();});
 // ======================= views: next-3 + knockout + router =======================
 function renderNext3(){
   const wrap=document.getElementById('n3'); if(!wrap) return;
-  const Z='Asia/Tokyo';
+  const Z=zoneOf();
   const up=SCHEDULE.matches.filter(m=>m.status!=='FINISHED').slice(0,3);
   let h='';
   up.forEach(m=>{
     const tag=m.group?`${m.group.replace('GROUP_','')}組`:(STAGE_JP[m.stage]||'');
-    h+=`<div class="n3card"><div class="n3when">${fmtD(m.utc,Z)} ${fmtT(m.utc,Z)} <span style="color:var(--faint)">日本時間</span></div>`+
+    h+=`<div class="n3card"><div class="n3when">${fmtD(m.utc,Z)} ${fmtT(m.utc,Z)} <span style="color:var(--faint)">${tzFull()}</span></div>`+
        `<div class="n3teams">${teamSpan(m.home)} <span class="n3vs">vs</span> ${teamSpan(m.away)}</div>`+
        `<div class="n3stage">${tag}</div></div>`;
   });
@@ -971,20 +978,23 @@ function renderNext3(){
 }
 function renderKO(){
   const wrap=document.getElementById('koBody'); if(!wrap) return;
-  const zone=zoneOf();
-  const order=[['LAST_32','ラウンド32'],['LAST_16','ラウンド16'],['QUARTER_FINALS','準々決勝'],['SEMI_FINALS','準決勝'],['THIRD_PLACE','3位決定戦'],['FINAL','決勝']];
+  const cols=[['LAST_32','R32'],['LAST_16','R16'],['QUARTER_FINALS','準々'],['SEMI_FINALS','準決'],['FINAL','決勝'],['THIRD_PLACE','3位']];
+  const f=(nm,win)=> nm
+    ? `<span class="kf${win?' w':''}" title="${nm}" onclick="event.stopPropagation();openCountry('${esc(nm)}')">${FLAGS[nm]||'🏳'}</span>`
+    : '<span class="kf tbd">·</span>';
   let h='';
-  order.forEach(([st,lab])=>{
+  cols.forEach(([st,lab])=>{
     const ms=SCHEDULE.matches.filter(m=>m.stage===st); if(!ms.length) return;
-    let rows='';
+    let cells='';
     ms.forEach(m=>{
       const fin=m.status==='FINISHED', hw=fin&&m.winner==='HOME_TEAM', aw=fin&&m.winner==='AWAY_TEAM';
-      const mid=fin?`<span class="mscore">${m.score[0]}–${m.score[1]}${m.pens?` <span class="pen">PK ${m.pens[0]}-${m.pens[1]}</span>`:''}</span>`:'<span class="vs">vs</span>';
-      rows+=`<div class="korow"><span class="kot">${fmtD(m.utc,zone)}</span><div class="koteams">${teamSpan(m.home,hw)} ${mid} ${teamSpan(m.away,aw)}</div></div>`;
+      const sc=fin?`<span class="ks">${m.score[0]}-${m.score[1]}${m.pens?'p':''}</span>`:'<span class="ks tbd">–</span>';
+      const t=`${m.home||'?'} vs ${m.away||'?'}${fin?` ${m.score[0]}-${m.score[1]}`:''}`;
+      cells+=`<div class="kocell" title="${t}">${f(m.home,hw)}${sc}${f(m.away,aw)}</div>`;
     });
-    h+=`<div class="koround"><div class="korh">${lab}<span class="korn">${ms.length}試合</span></div>${rows}</div>`;
+    h+=`<div class="kocol"><div class="kocolh">${lab}<span class="kocn">${ms.length}</span></div><div class="kocells">${cells}</div></div>`;
   });
-  wrap.innerHTML=h;
+  wrap.innerHTML=`<div class="kobr">${h}</div>`;
 }
 function switchView(v){
   ['home','results','ai'].forEach(x=>{ const el=document.getElementById('v-'+x); if(el)el.hidden=(x!==v); });
