@@ -222,18 +222,11 @@ td.z{color:var(--faint)}
 .foot{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
   font-family:var(--mono);font-size:11px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 
-/* iPad & phones: dissolve the fixed 7/7/5 ballot grid into a centered fluid wrap */
-@media(max-width:1180px){
-  .bgrid{display:flex;flex-wrap:wrap;justify-content:center;width:auto;max-width:none;margin:0;gap:11px}
-  .brow{display:contents}
-  .bcard{flex:0 1 150px}
-}
 @media(max-width:720px){
   .shead{flex-wrap:wrap} .shead .note{margin-left:0;text-align:left;max-width:none}
   .nav .brandmark span{display:none}
   .wrap{padding:0 12px 80px}
   .wordmark{font-size:clamp(40px,15vw,90px)}
-  .bcard{flex:0 1 46%}
 }
 /* SWITCHABLE FLOW CONTROL */
 .flowctl{display:flex;align-items:center;gap:14px 16px;flex-wrap:wrap;margin-bottom:16px}
@@ -249,11 +242,15 @@ select:hover{border-color:var(--gold)}
 .flowstat .pctl{flex-basis:100%;color:var(--faint);font-size:11px;letter-spacing:.01em}
 @media(min-width:721px){.flowstat .pctl{flex-basis:auto;margin-left:auto}}
 
-/* BALLOT GRID — 7 / 7 / 5 rows; grid width = 7 cards, last row (5) centered */
-.bgrid{--cw:152px;--cg:12px;display:flex;flex-direction:column;gap:var(--cg);
-  width:calc(var(--cw)*7 + var(--cg)*6);max-width:100%;margin:0 auto}
-.brow{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--cg);width:100%}
-.bcard{flex:0 1 var(--cw);background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+/* BALLOT GRID — desktop: centered 7/7/5 (flex, capped at 7-card width). Below that,
+   a column-count grid chosen so 19 never leaves a lone card (5→5+5+5+4, 4→…+3);
+   only the 2-col phone has a lone card, which is centered. Clean at every width. */
+.bgrid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:1136px;margin:0 auto}
+@media(max-width:1160px){.bgrid{display:grid;grid-template-columns:repeat(5,1fr);max-width:none}}
+@media(max-width:860px){.bgrid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:520px){.bgrid{grid-template-columns:repeat(2,1fr)}
+  .bcard:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc(50% - 6px)}}
+.bcard{flex:0 1 152px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;
   transition:.2s}
 .bcard:hover{border-color:var(--line2);transform:translateY(-2px)}
 .bcard.you{border-color:rgba(246,196,81,.55);box-shadow:0 0 0 1px rgba(246,196,81,.22),0 0 22px rgba(246,196,81,.1)}
@@ -397,13 +394,15 @@ body.noscroll{overflow:hidden}
   <section id="bracket">
     <div class="shead"><div class="num">06</div><div class="tt"><div class="ek">Knockout</div><h2>予想決勝トーナメント</h2></div>
       <div class="note">各スロット＝最頻チーム、ハイライト＝予想勝者。左R32→右決勝、横スクロール可。</div></div>
-    <div class="bkt" id="bkt"></div>
+    <details class="acc"><summary>展開して表示 <span class="ek">Expand to view</span></summary>
+      <div class="body" style="padding:6px 2px 2px"><div class="bkt" id="bkt"></div></div>
+    </details>
   </section>
 
   <!-- 07 MODEL -->
   <section id="model">
     <div class="shead"><div class="num">07</div><div class="tt"><div class="ek">The Math</div><h2>モデルと数学</h2></div></div>
-    <details class="acc" open><summary>強度・会場・相手モデル <span class="ek">Strength · Venue · Opponents</span></summary>
+    <details class="acc"><summary>強度・会場・相手モデル <span class="ek">Strength · Venue · Opponents</span></summary>
       <div class="body"><ul>
         <li>強度 = Elo × ブックメーカー優勝オッズ × FIFAランク（標準化ブレンド 0.35/0.45/0.20）。</li>
         <li>試合 = レーティング差→得点ポアソン。グループのタイブレーク（勝点→得失点→総得点）再現。</li>
@@ -506,21 +505,14 @@ const MATRIX={"countries": [{"nm": "Spain", "ew": 4.49}, {"nm": "Argentina", "ew
 // ===== participant ballots (section 01) — click a card for the detail modal =====
 (function(){
   const bg=document.getElementById('bgrid');
-  function card(p){
+  BALLOTS.forEach(p=>{
     const c=document.createElement('div');
     c.className='bcard';
     let lis='';
     p.picks.forEach(([pt,nm])=>{lis+=`<li><span class="bp">${pt}</span><span class="flag">${FLAGS[nm]||''}</span><span class="bn">${nm}</span></li>`;});
     c.innerHTML=`<div class="bh">${p.name}</div><ol class="bl">${lis}</ol>`;
     c.onclick=()=>openModal(p.name);
-    return c;
-  }
-  // explicit 7 / 7 / 5 rows (19 players); fall back to one row otherwise
-  const rows=(BALLOTS.length===19)?[[0,7],[7,14],[14,19]]:[[0,BALLOTS.length]];
-  rows.forEach(([a,b])=>{
-    const row=document.createElement('div');row.className='brow';
-    for(let i=a;i<b;i++)row.appendChild(card(BALLOTS[i]));
-    bg.appendChild(row);
+    bg.appendChild(c);
   });
 })();
 // ===== individual detail modal (opened from a ballot card / matrix name) =====
