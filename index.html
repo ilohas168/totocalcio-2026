@@ -303,7 +303,7 @@ body.noscroll{overflow:hidden}
   border-radius:9px;font-size:22px;line-height:1;cursor:pointer;flex:none}
 .modalx:hover{color:#fff;background:rgba(255,255,255,.12)}
 .modal #modalStat{margin-bottom:7px}
-@media(max-width:560px){.modal{padding:18px 9px}.modalbox{padding:15px 15px 18px}.modalhead{margin-bottom:10px;padding-bottom:9px}.modalhead .mt{font-size:22px}.mdlist{max-height:42vh}}
+@media(max-width:560px){.modal{padding:18px 9px}.modalbox{padding:15px 15px 18px}.modalhead{margin-bottom:10px;padding-bottom:9px}.modalhead .mt{font-size:22px}}
 /* MODAL PERCENTILE GRAPH */
 .pgraph{margin:0 0 10px}
 .pgcap{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--muted);margin-bottom:7px}
@@ -378,7 +378,7 @@ body.noscroll{overflow:hidden}
 .cmsub{font-family:var(--mono);font-size:12px;color:var(--muted);margin:-2px 0 12px}
 /* ===== popup detail list (mobile-first, no h-scroll) ===== */
 .mdlegend{font-size:10.5px;color:var(--faint);margin:-4px 0 8px;line-height:1.45}
-.mdlist{display:flex;flex-direction:column;gap:4px;max-height:46vh;overflow-y:auto;overscroll-behavior:contain;padding-right:3px}
+.mdlist{display:flex;flex-direction:column;gap:4px}
 .mditem{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 12px;cursor:pointer;transition:border-color .15s}
 .mditem:hover{border-color:var(--line2)}
 .mdc{display:flex;align-items:baseline;gap:7px;font-size:13.5px;font-weight:700;min-width:0}
@@ -470,6 +470,11 @@ body.noscroll{overflow:hidden}
 .kf.tbd{opacity:.3;cursor:default;filter:none}
 .ks{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--txt);min-width:30px;text-align:center}
 .ks.tbd{color:var(--faint);font-weight:400}
+.n3tzlab{color:#fff;background:rgba(246,196,81,.18);border:1px solid rgba(246,196,81,.45);border-radius:5px;padding:1px 7px;font-size:10.5px;margin-left:4px;font-weight:700}
+.mditem.pick{box-shadow:inset 3px 0 0 var(--gold)}
+.mditem.pick .mdpts b{color:var(--gold2)}
+.mditem.nopt{opacity:.55}
+.mddiv{font-family:var(--mono);font-size:10px;color:var(--faint);text-align:center;margin:11px 0 6px;letter-spacing:.04em;border-top:1px dashed var(--line);padding-top:9px}
 </style>
 </head>
 <body>
@@ -498,7 +503,7 @@ body.noscroll{overflow:hidden}
   </div></div>
 
   <section id="next3sec" class="next3sec">
-    <div class="n3head"><span class="ek">Next 3 Matches</span><h3>次の3試合</h3><div class="n3tz"><button class="n3tzb on" data-tz="jp">日本</button><button class="n3tzb" data-tz="us">米ET</button><button class="n3tzb" data-tz="ch">スイス</button></div></div>
+    <div class="n3head"><span class="ek">Next 3 Matches</span><h3>次の3試合</h3><div class="n3tz"><button class="n3tzb on" data-tz="jp">日本時間</button><button class="n3tzb" data-tz="us">米国 ET</button><button class="n3tzb" data-tz="ch">スイス時間</button></div></div>
     <div class="n3grid" id="n3"></div>
   </section>
 
@@ -613,7 +618,7 @@ body.noscroll{overflow:hidden}
   <div class="modalhead"><span class="mt" id="modalTitle"></span><button class="modalx" onclick="closeModal()">×</button></div>
   <div class="flowstat" id="modalStat"></div>
   <div class="pgraph" id="modalGraph"></div>
-  <div class="mdlegend">「配点」＝持ち点 ・ <b>「1勝」＝その国が1勝した時の増減</b>（行クリックで日程）</div><div class="mdlist" id="modalBody"></div>
+  <div class="mdlegend"><b style="color:var(--gold2)">金の縦線＝配点した国</b> ・「1勝」＝その国が1勝した時の増減（行クリックで日程）</div><div class="mdlist" id="modalBody"></div>
 </div></div>
 
 <div class="modal" id="cmodal" onclick="if(event.target===this)closeCountry()"><div class="modalbox">
@@ -723,11 +728,12 @@ function openModal(key){
   const d=FLOW[key]; if(!d) return;
   document.getElementById('modalTitle').textContent=key;
   const rows=d.rows.slice().sort((a,b)=>(b[2]-a[2])||(b[1]-a[1]));   // 配点 desc, then 期待勝利数
-  let mh='';
+  let mh='', divShown=false;
   rows.forEach(r=>{
     const nm=r[0],ew=r[1],pts=r[2],oth=r[3],pw=r[4],tot=r[5];
+    if(pts===0&&!divShown){ mh+='<div class="mddiv">― 配点なし（勝つと失点するリスク国）―</div>'; divShown=true; }
     const cls=pw>0?'pos':(pw<0?'neg':'zero');
-    mh+=`<div class="mditem" onclick="openCountry('${esc(nm)}')">`+
+    mh+=`<div class="mditem ${pts>0?'pick':'nopt'}" onclick="openCountry('${esc(nm)}')">`+
       `<div class="mdc"><span class="flag">${FLAGS[nm]||''}</span><span class="mdnm">${nm}</span>`+
       `<span class="mdmeta">期待${ew.toFixed(2)}・通算${tot>=0?'+':''}${tot}</span></div>`+
       `<div class="mdpts">配点 <b>${pts||0}</b></div>`+
@@ -970,7 +976,7 @@ function renderNext3(){
   let h='';
   up.forEach(m=>{
     const tag=m.group?`${m.group.replace('GROUP_','')}組`:(STAGE_JP[m.stage]||'');
-    h+=`<div class="n3card"><div class="n3when">${fmtD(m.utc,Z)} ${fmtT(m.utc,Z)} <span style="color:var(--faint)">${tzFull()}</span></div>`+
+    h+=`<div class="n3card"><div class="n3when">${fmtD(m.utc,Z)} <b style="color:var(--txt)">${fmtT(m.utc,Z)}</b> <span class="n3tzlab">${tzFull()}</span></div>`+
        `<div class="n3teams">${teamSpan(m.home)} <span class="n3vs">vs</span> ${teamSpan(m.away)}</div>`+
        `<div class="n3stage">${tag}</div></div>`;
   });
