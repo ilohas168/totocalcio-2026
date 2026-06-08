@@ -222,11 +222,18 @@ td.z{color:var(--faint)}
 .foot{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
   font-family:var(--mono);font-size:11px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 
+/* iPad & phones: dissolve the fixed 7/7/5 ballot grid into a centered fluid wrap */
+@media(max-width:1180px){
+  .bgrid{display:flex;flex-wrap:wrap;justify-content:center;width:auto;max-width:none;margin:0;gap:11px}
+  .brow{display:contents}
+  .bcard{flex:0 1 150px}
+}
 @media(max-width:720px){
-  .stats{grid-template-columns:1fr}
   .shead{flex-wrap:wrap} .shead .note{margin-left:0;text-align:left;max-width:none}
-  .pl{grid-template-columns:48px 1fr;gap:10px} .pl .ew{grid-column:2;text-align:left}
   .nav .brandmark span{display:none}
+  .wrap{padding:0 12px 80px}
+  .wordmark{font-size:clamp(40px,15vw,90px)}
+  .bcard{flex:0 1 46%}
 }
 /* SWITCHABLE FLOW CONTROL */
 .flowctl{display:flex;align-items:center;gap:14px 16px;flex-wrap:wrap;margin-bottom:16px}
@@ -357,7 +364,7 @@ body.noscroll{overflow:hidden}
   <!-- 02 CHEAT SHEET -->
   <section id="flow">
     <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Point Swings · Cheat Sheet</div><h2>全員の得失点早見表</h2></div>
-      <div class="note">各国が<b>1勝するごと</b>に全員の点がどう動くか（19人 × 各国）。<span class="pos">緑＝もらう</span> / <span class="neg">赤＝払う</span>。列はE[W]順・横スクロール可。名前を<b>クリックで個人詳細</b>。</div></div>
+      <div class="note">各国が<b>1勝するごと</b>に全員の点がどう動くか（19人 × 各国）。<span class="pos">緑＝もらう</span> / <span class="neg">赤＝払う</span>。列は期待勝利数順・横スクロール可。名前を<b>クリックで個人詳細</b>。</div></div>
     <div class="tbl-wrap"><table id="matTbl"></table></div>
   </section>
 
@@ -419,7 +426,7 @@ body.noscroll{overflow:hidden}
   <div class="modalhead"><span class="mt" id="modalTitle"></span><button class="modalx" onclick="closeModal()">×</button></div>
   <div class="flowstat" id="modalStat"></div>
   <div class="pgraph" id="modalGraph"></div>
-  <div class="tbl-wrap"><table id="modalTbl"><thead><tr><th style="text-align:left">国 / Nation</th><th>E[W]</th><th>配点</th><th>他/人</th><th>1勝</th><th>通算</th></tr></thead><tbody id="modalBody"></tbody></table></div>
+  <div class="tbl-wrap"><table id="modalTbl"><thead><tr><th style="text-align:left">国 / Nation</th><th>期待勝利数</th><th>配点</th><th>平均点</th><th>1勝</th><th>通算</th></tr></thead><tbody id="modalBody"></tbody></table></div>
 </div></div>
 
 <script>
@@ -587,7 +594,7 @@ function matCell(v){
 (function(){
   const t=document.getElementById('matTbl'); if(!t||!MATRIX.countries) return;
   let head='<thead><tr><th style="text-align:left">参加者 ＼ 国（1勝あたり）</th>';
-  MATRIX.countries.forEach(c=>{head+=`<th class="cty" title="${c.nm} · E[W] ${c.ew}">${FLAGS[c.nm]||c.nm.slice(0,3)}</th>`;});
+  MATRIX.countries.forEach(c=>{head+=`<th class="cty" title="${c.nm} · 期待勝利数 ${c.ew}">${FLAGS[c.nm]||c.nm.slice(0,3)}</th>`;});
   head+='</tr></thead><tbody>';
   let body='';
   MATRIX.rows.forEach(r=>{
