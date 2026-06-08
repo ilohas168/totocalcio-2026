@@ -863,7 +863,7 @@ function renderStandings(){
   const live=SCHEDULE.finished>0;
   document.getElementById('lbNote').innerHTML=live
     ? `⚽️ <b>${SCHEDULE.finished}/104</b> 試合終了 — 実際の獲得点（ゼロサム）。行クリックで個人詳細。`
-    : `⚽️ <b>大会開始前</b>。<b>6/11開幕</b>後、結果を自動反映して順位が動きます。「予想」＝全シミュレーション平均（＝今の本命）。`;
+    : `⚽️ <b>大会開始前</b>。全員0点。<b>6/11開幕</b>後、試合結果を自動反映して順位が動きます。`;
   const medal=['🥇','🥈','🥉'];
   let h='';
   STANDINGS.forEach((r,i)=>{
@@ -872,7 +872,7 @@ function renderStandings(){
     const nm=r.name;
     h+=`<div class="${cls.join(' ')}" onclick="openModal('${esc(r.name)}')">`+
        `<div class="lbrk">${top?`<span class="lbmedal">${medal[i]}</span>`:rk}</div>`+
-       `<div class="lbmid"><span class="lbnm">${nm}</span><span class="lbsub">予想 ${r.mean>=0?'+':''}${r.mean}</span></div>`+
+       `<div class="lbmid"><span class="lbnm">${nm}</span></div>`+
        `<div class="lbpts ${sc>0?'pos':(sc<0?'neg':'')}">${live?sg:'—'}</div></div>`;
   });
   wrap.innerHTML=h;
