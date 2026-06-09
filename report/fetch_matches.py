@@ -13,7 +13,9 @@ In CI:        set FOOTBALL_DATA_TOKEN as a secret env var.
 """
 import os
 import json
+import time
 import urllib.request
+import urllib.error
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -34,12 +36,29 @@ NAME_FIX = {"Cape Verde Islands": "Cape Verde", "Turkey": "Türkiye"}
 def canon(n):
     return NAME_FIX.get(n, n) if n else None
 
-def api(path):
+def api(path, retries=5):
+    """GET with retry+backoff. The football-data.org server occasionally drops the
+    connection (RemoteDisconnected) or rate-limits (429); those are transient, so
+    retry a few times. Auth/not-found (401/403/404) fail fast."""
     req = urllib.request.Request(
         "https://api.football-data.org/v4" + path,
-        headers={"X-Auth-Token": TOKEN})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+        headers={"X-Auth-Token": TOKEN, "User-Agent": "totocalcio-bot/1.0"})
+    for attempt in range(1, retries + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=40) as r:
+                return json.load(r)
+        except urllib.error.HTTPError as e:
+            if e.code not in (429, 500, 502, 503, 504) or attempt == retries:
+                raise                                    # auth / 4xx → fail fast
+            wait = min(60, 6 * attempt)
+            print(f"  HTTP {e.code} from API; retry {attempt}/{retries} in {wait}s")
+            time.sleep(wait)
+        except (urllib.error.URLError, OSError) as e:    # RemoteDisconnected / timeout / drop
+            if attempt == retries:
+                raise SystemExit(f"API unreachable after {retries} tries: {type(e).__name__}: {e}")
+            wait = min(60, 6 * attempt)
+            print(f"  {type(e).__name__} ({e}); retry {attempt}/{retries} in {wait}s")
+            time.sleep(wait)
 
 ms = api("/competitions/WC/matches")["matches"]
 sched, wins = [], {}
