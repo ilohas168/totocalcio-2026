@@ -582,7 +582,7 @@ body.noscroll{overflow:hidden}
     <button class="ctabtn" data-v="results"><span class="ic">
 </span><div><b>結果</b><span>グループ表 / トーナメント結果</span></div><span class="ar">→</span></button>
     <button class="ctabtn" data-v="ai"><span class="ic">
-</span><div><b>参加者評価</b><span>各自のベスト／ワーストケース</span></div><span class="ar">→</span></button>
+</span><div><b>参加者評価</b><span>各自のベストケース／ワーストケース</span></div><span class="ar">→</span></button>
   </div>
   </div>
 
@@ -624,7 +624,7 @@ body.noscroll{overflow:hidden}
     <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">The 19-Player Pool</div><h2>参加者評価</h2></div>
       <div class="note">各自の配点での、最も有利／不利な展開での通算得失点。<b>ヘッダーをタップで並べ替え</b>・名前で個人詳細。</div></div>
     <div class="tbl-wrap">
-    <table id="rivalTbl"><thead><tr><th class="rsort" data-sort="name" onclick="sortRivals('name')" style="text-align:left">参加者<span class="sind"></span></th><th class="rsort" data-sort="best" onclick="sortRivals('best')">ベスト<span class="sind"></span></th><th class="rsort" data-sort="worst" onclick="sortRivals('worst')">ワースト<span class="sind"></span></th></tr></thead><tbody id="rivalBody"></tbody></table>
+    <table id="rivalTbl"><thead><tr><th class="rsort" data-sort="name" onclick="sortRivals('name')" style="text-align:left">参加者<span class="sind"></span></th><th class="rsort" data-sort="best" onclick="sortRivals('best')">ベストケース<span class="sind"></span></th><th class="rsort" data-sort="worst" onclick="sortRivals('worst')">ワーストケース<span class="sind"></span></th></tr></thead><tbody id="rivalBody"></tbody></table>
     </div>
   </section>
   </div>
@@ -724,8 +724,8 @@ function openModal(key){
   document.getElementById('modalBody').innerHTML=mh;
   const s=d.stats;
   document.getElementById('modalStat').innerHTML=
-    `<span>ベスト <b class="pos">${fmtSigned(s.best)}</b></span>`+
-    `<span>ワースト <b class="neg">${fmtSigned(s.worst)}</b></span>`;
+    `<span>ベストケース <b class="pos">${fmtSigned(s.best)}</b></span>`+
+    `<span>ワーストケース <b class="neg">${fmtSigned(s.worst)}</b></span>`;
   document.getElementById('modal').classList.add('open');
   document.body.classList.add('noscroll');   // lock background scroll
 }
