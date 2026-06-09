@@ -622,7 +622,7 @@ body.noscroll{overflow:hidden}
   <div class="view" id="v-ai" hidden>
   <section id="rivals">
     <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">The 19-Player Pool</div><h2>参加者評価</h2></div>
-      <div class="note">各自の配点での、最も有利／不利な展開での通算得失点。名前を<b>クリックで個人詳細</b>。</div></div>
+      <div class="note">各自の配点での、最も有利／不利な展開での通算得失点。<b>ヘッダーをタップで並べ替え</b>・名前で個人詳細。</div></div>
     <div class="tbl-wrap">
     <table id="rivalTbl"><thead><tr><th class="rsort" data-sort="name" onclick="sortRivals('name')" style="text-align:left">参加者<span class="sind"></span></th><th class="rsort" data-sort="best" onclick="sortRivals('best')">ベスト<span class="sind"></span></th><th class="rsort" data-sort="worst" onclick="sortRivals('worst')">ワースト<span class="sind"></span></th></tr></thead><tbody id="rivalBody"></tbody></table>
     </div>
@@ -821,7 +821,7 @@ function renderStandings(){
   const medal=['🥇','🥈','🥉'];
   let h='';
   STANDINGS.slice().sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).forEach((r,i)=>{
-    const rk=i+1, top=rk<=3, cls=['lbrow']; if(top)cls.push('podium','top'+rk); if(r.you)cls.push('you');
+    const rk=i+1, top=rk<=3, cls=['lbrow']; if(top)cls.push('podium','top'+rk);
     const sc=r.score, sg=(sc>=0?'+':'')+sc;
     const nm=r.name;
     h+=`<div class="${cls.join(' ')}" onclick="openModal('${esc(r.name)}')">`+
