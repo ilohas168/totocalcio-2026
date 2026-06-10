@@ -500,6 +500,7 @@ body.noscroll{overflow:hidden}
 .cmtzb{font-family:var(--cond);text-transform:uppercase;letter-spacing:.03em;font-weight:700;font-size:11px;padding:5px 12px;border-radius:999px;border:1px solid var(--line2);background:var(--surface);color:var(--muted);cursor:pointer}
 .cmtzb.on{background:var(--gold);color:#1a1304;border-color:var(--gold)}
 .rsort{cursor:pointer;user-select:none;white-space:nowrap}.rsort:hover{color:var(--gold2)}#rivalTbl th.sorted{color:var(--gold)}#rivalTbl .sind{font-size:9px;margin-left:1px}
+.kslot{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--muted);white-space:nowrap}
 </style>
 
 <style id="tweak-overrides">
@@ -561,7 +562,7 @@ body.noscroll{overflow:hidden}
 
   <section id="flow">
     <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Point Swings · Cheat Sheet</div><h2>全員の得失点早見表</h2></div>
-      <div class="note">各国が<b>1勝するごと</b>に全員の点がどう動くか（19人 × 各国）。<span class="pos">緑＝もらう</span> / <span class="neg">赤＝払う</span>。横スクロール可。名前を<b>クリックで個人詳細</b>。</div></div>
+      <div class="note">各国が<b>1勝するごと</b>に全員の点がどう動くか（19人 × 各国）。<span class="pos">緑＝もらう</span> / <span class="neg">赤＝失う</span>。横スクロール可。名前を<b>クリックで個人詳細</b>。</div></div>
     <div class="tbl-wrap"><table id="matTbl"></table></div>
   </section>
 
@@ -609,7 +610,7 @@ body.noscroll{overflow:hidden}
 
   <section id="koresults">
     <div class="shead"><div class="num">02</div><div class="tt"><div class="ek">Knockout · Live</div><h2>トーナメント結果</h2></div>
-      <div class="note">決勝トーナメントの実際の対戦・結果（R32は6/28〜）。勝者を金でハイライト・横スクロール可。国旗クリックで日程。</div></div>
+      <div class="note">決勝トーナメントの組合せ・結果。R32の枠＝<b>A①</b>:A組1位 / <b>A②</b>:A組2位 / <b>3位</b>:各組3位（決定するとチームに変わる）。勝者を金でハイライト・横スクロール可。</div></div>
     <div class="kolist" id="koBody"></div>
   </section>
   </div>
@@ -950,18 +951,22 @@ function renderNext3(){
 function renderKO(){
   const wrap=document.getElementById('koBody'); if(!wrap) return;
   const cols=[['LAST_32','R32'],['LAST_16','R16'],['QUARTER_FINALS','準々'],['SEMI_FINALS','準決'],['FINAL','決勝'],['THIRD_PLACE','3位']];
-  const f=(nm,win)=> nm
+  const SLOT={"2026-06-28T19:00:00Z":["A②","B②"],"2026-06-29T20:30:00Z":["E①","3位","A/B/C/D/F"],"2026-06-30T01:00:00Z":["F①","C②"],"2026-06-29T17:00:00Z":["C①","F②"],"2026-06-30T21:00:00Z":["I①","3位","C/D/F/G/H"],"2026-06-30T17:00:00Z":["E②","I②"],"2026-07-01T01:00:00Z":["A①","3位","C/E/F/H/I"],"2026-07-01T16:00:00Z":["L①","3位","E/H/I/J/K"],"2026-07-02T00:00:00Z":["D①","3位","B/E/F/I/J"],"2026-07-01T20:00:00Z":["G①","3位","A/E/H/I/J"],"2026-07-02T23:00:00Z":["K②","L②"],"2026-07-02T19:00:00Z":["H①","J②"],"2026-07-03T03:00:00Z":["B①","3位","E/F/G/I/J"],"2026-07-03T22:00:00Z":["J①","H②"],"2026-07-04T01:30:00Z":["K①","3位","D/E/I/J/L"],"2026-07-03T18:00:00Z":["D②","G②"]};
+  const slotJP=(c)=>c==='3位'?'3位':c[0]+'組'+(c[1]==='①'?'1位':'2位');
+  const f=(nm,win,slot)=> nm
     ? `<span class="kf${win?' w':''}" title="${nm}" onclick="event.stopPropagation();openCountry('${esc(nm)}')">${FLAGS[nm]||'🏳'}</span>`
-    : '<span class="kf tbd">·</span>';
+    : (slot?`<span class="kslot">${slot}</span>`:'<span class="kf tbd">·</span>');
   let h='';
   cols.forEach(([st,lab])=>{
     const ms=SCHEDULE.matches.filter(m=>m.stage===st); if(!ms.length) return;
     let cells='';
     ms.forEach(m=>{
       const fin=m.status==='FINISHED', hw=fin&&m.winner==='HOME_TEAM', aw=fin&&m.winner==='AWAY_TEAM';
+      const s=SLOT[m.utc]||[];
       const sc=fin?`<span class="ks">${m.score[0]}-${m.score[1]}${m.pens?'p':''}</span>`:'<span class="ks tbd">–</span>';
-      const t=`${m.home||'?'} vs ${m.away||'?'}${fin?` ${m.score[0]}-${m.score[1]}`:''}`;
-      cells+=`<div class="kocell" title="${t}">${f(m.home,hw)}${sc}${f(m.away,aw)}</div>`;
+      const hn=m.home||(s[0]?slotJP(s[0]):'?'), an=m.away||(s[1]?(s[2]?s[2]+'組の3位':slotJP(s[1])):'?');
+      const t=`${hn} vs ${an}${fin?` ${m.score[0]}-${m.score[1]}`:''}`;
+      cells+=`<div class="kocell" title="${t}">${f(m.home,hw,s[0])}${sc}${f(m.away,aw,s[1])}</div>`;
     });
     h+=`<div class="kocol"><div class="kocolh">${lab}<span class="kocn">${ms.length}</span></div><div class="kocells">${cells}</div></div>`;
   });
