@@ -71,12 +71,20 @@ for m in ms:
            "home": home, "away": away, "status": st}
     sc = m.get("score") or {}
     ft = sc.get("fullTime") or {}
+    w = sc.get("winner")  # HOME_TEAM / AWAY_TEAM / DRAW
     if st == "FINISHED":
-        rec["score"] = [ft.get("home"), ft.get("away")]
+        if ft.get("home") is None or ft.get("away") is None or w is None:
+            # The API transiently flags a match FINISHED before the final
+            # score/winner are published (seen after MEX–RSA on 2026-06-11).
+            # Keep it as in-play so the page shows "vs" instead of null–null
+            # and no win is credited until the result is actually confirmed.
+            rec["status"] = "IN_PLAY"
+            sched.append(rec)
+            continue
+        rec["score"] = [ft["home"], ft["away"]]
         pen = sc.get("penalties") or {}
         if pen.get("home") is not None:
             rec["pens"] = [pen["home"], pen["away"]]
-        w = sc.get("winner")  # HOME_TEAM / AWAY_TEAM / DRAW
         rec["winner"] = w
         adv = home if w == "HOME_TEAM" else (away if w == "AWAY_TEAM" else None)
         if adv:                       # group win or knockout advance (incl. penalties)

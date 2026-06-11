@@ -885,7 +885,7 @@ function teamSpan(nm,win){
   return `<span class="tm${win?' win':''}" onclick="event.stopPropagation();openCountry('${esc(nm)}')"><span class="flag">${FLAGS[nm]||''}</span>${nm}</span>`;
 }
 function matchRow(m,zone){
-  const fin=m.status==='FINISHED';
+  const fin=m.status==='FINISHED'&&m.score;
   const hw=fin&&m.winner==='HOME_TEAM', aw=fin&&m.winner==='AWAY_TEAM';
   const mid=fin
     ? `<span class="mscore">${m.score[0]}–${m.score[1]}${m.pens?` <span class="pen">PK ${m.pens[0]}-${m.pens[1]}</span>`:''}</span>`
@@ -1010,7 +1010,7 @@ function renderKO(){
     const ms=SCHEDULE.matches.filter(m=>m.stage===st); if(!ms.length) return;
     let cells='';
     ms.forEach(m=>{
-      const fin=m.status==='FINISHED', hw=fin&&m.winner==='HOME_TEAM', aw=fin&&m.winner==='AWAY_TEAM';
+      const fin=m.status==='FINISHED'&&m.score, hw=fin&&m.winner==='HOME_TEAM', aw=fin&&m.winner==='AWAY_TEAM';
       const sc=fin?`<span class="ks">${m.score[0]}-${m.score[1]}${m.pens?'p':''}</span>`:'<span class="ks tbd">–</span>';
       const t=`${m.home||'?'} vs ${m.away||'?'}${fin?` ${m.score[0]}-${m.score[1]}`:''}`;
       cells+=`<div class="kocell" title="${t}">${f(m.home,hw)}${sc}${f(m.away,aw)}</div>`;
