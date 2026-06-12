@@ -377,6 +377,7 @@ body.noscroll{overflow:hidden}
 .mditem:hover{border-color:var(--line2)}
 .mdc{display:flex;align-items:baseline;gap:7px;font-size:13.5px;font-weight:700;min-width:0}
 .mdnm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mdwin{color:var(--faint);font-size:11px;font-weight:400;white-space:nowrap}
 .mdmeta{font-family:var(--mono);font-size:9.5px;font-weight:400;color:var(--faint);white-space:nowrap}
 .mdpts{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
 .mdpts b{font-size:14px;color:var(--txt)}
@@ -581,7 +582,7 @@ body.noscroll{overflow:hidden}
     <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">The 19-Player Pool</div><h2>参加者評価</h2></div>
       <div class="note">全19人の確定フィールドで評価。<b>終了した試合の結果を織り込んで毎回再計算</b>（残り試合はシミュレーション）。平均/ベスト/ワースト/分布＝合計点の見込み。</div></div>
     <div class="tbl-wrap">
-    <table id="rivalTbl"><thead><tr><th style="text-align:left">参加者</th><th style="text-align:left">P(0点以上)</th><th>平均</th><th>ベスト</th><th>ワースト</th><th style="text-align:left">分布 5–95% ・中央</th><th style="text-align:left">予想の特徴</th></tr></thead><tbody id="rivalBody"></tbody></table>
+    <table id="rivalTbl"><thead><tr><th style="text-align:left">参加者</th><th style="text-align:left">P(0点以上)</th><th>平均</th><th>ベスト（現時点）</th><th>ワースト（現時点）</th><th style="text-align:left">分布 5–95% ・中央</th><th style="text-align:left">予想の特徴</th></tr></thead><tbody id="rivalBody"></tbody></table>
     </div>
   </section>
 
@@ -742,17 +743,27 @@ function flowCell(v){
   const col=v>0?'#bff7d6':'#ffc6cd';
   return `<td class="hcell" style="background:${bg};color:${col};border-radius:5px">${fmtSigned(v)}</td>`;
 }
+function winsSoFar(){            // 国ごとの現在の勝利数（プール規定：グループ引分け除外・PK勝ち含む）
+  const w={};
+  SCHEDULE.matches.forEach(m=>{
+    if(m.status!=='FINISHED')return;
+    const t=m.winner==='HOME_TEAM'?m.home:(m.winner==='AWAY_TEAM'?m.away:null);
+    if(t)w[t]=(w[t]||0)+1;
+  });
+  return w;
+}
 function openModal(key){
   const d=FLOW[key]; if(!d) return;
   document.getElementById('modalTitle').textContent=key;
   const rows=d.rows.slice().sort((a,b)=>(b[2]-a[2])||(b[1]-a[1]));   // 配点 desc, then 期待勝利数
+  const W=winsSoFar();
   let mh='', divShown=false;
   rows.forEach(r=>{
     const nm=r[0],ew=r[1],pts=r[2],oth=r[3],pw=r[4],tot=r[5];
     if(pts===0&&!divShown){ mh+='<div class="mddiv">― 配点なし（勝つと失点するリスク国）―</div>'; divShown=true; }
     const cls=pw>0?'pos':(pw<0?'neg':'zero');
     mh+=`<div class="mditem ${pts>0?'pick':'nopt'}" onclick="openCountry('${esc(nm)}')">`+
-      `<div class="mdc"><span class="flag">${FLAGS[nm]||''}</span><span class="mdnm">${nm}</span>`+
+      `<div class="mdc"><span class="flag">${FLAGS[nm]||''}</span><span class="mdnm">${nm}</span>${W[nm]?`<span class="mdwin">（${W[nm]}勝）</span>`:''}`+
       `<span class="mdmeta">期待${ew.toFixed(2)}・通算${tot>=0?'+':''}${tot}</span></div>`+
       `<div class="mdpts">配点 <b>${pts||0}</b></div>`+
       `<div class="mdpw ${cls}">${pw>0?'+':''}${pw}</div></div>`;
@@ -761,8 +772,8 @@ function openModal(key){
   const s=d.stats;
   document.getElementById('modalStat').innerHTML=
     `<span>平均 <b class="${s.mean>=0?'pos':'neg'}">${fmtSigned(s.mean)}</b></span>`+
-    `<span>ベスト <b class="pos">${fmtSigned(s.best)}</b></span>`+
-    `<span>ワースト <b class="neg">${fmtSigned(s.worst)}</b></span>`+
+    `<span>ベスト（現時点） <b class="pos">${fmtSigned(s.best)}</b></span>`+
+    `<span>ワースト（現時点） <b class="neg">${fmtSigned(s.worst)}</b></span>`+
     `<span>P(0点以上) <b>${s.pos}%</b></span>`;
   document.getElementById('modalGraph').innerHTML=pgraph(s);
   document.getElementById('modal').classList.add('open');
