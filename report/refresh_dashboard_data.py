@@ -254,8 +254,8 @@ html = sub1(r"const SCHEDULE=\{.*?\};",
 ball_note = f'全{N}人の確定予想（締切後・全員ぶん）。'
 html = sub1(r'(<section id="pick">.*?<div class="note">).*?(</div>)',
             lambda m: m.group(1) + ball_note + m.group(2), html)
-riv_note = (f'全{N}人の確定フィールドで評価（相手の推測なし）。'
-            f'平均/ベスト/ワースト/分布＝全シミュレーションの合計点。')
+riv_note = (f'全{N}人の確定フィールドで評価。<b>終了した試合の結果を織り込んで毎回再計算</b>'
+            f'（残り試合はシミュレーション）。平均/ベスト/ワースト/分布＝合計点の見込み。')
 html = sub1(r'(<section id="rivals">.*?<div class="note">).*?(</div>)',
             lambda m: m.group(1) + riv_note + m.group(2), html)
 model_note = (f'相手モデル = 全{N}人の予想が確定（締切後）＝相手を推測する不確実性なし。'

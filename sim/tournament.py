@@ -38,6 +38,7 @@ DEFAULT_PARAMS = {
 SLOT_ORDER = [74, 77, 79, 80, 81, 82, 85, 87]
 GROUP_LETTERS = list("ABCDEFGHIJKL")
 LET2COL = {L: i for i, L in enumerate(GROUP_LETTERS)}
+PAIRS_GROUP = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]  # round-robin order
 
 
 # ----------------------------------------------------------------------------
@@ -190,12 +191,27 @@ def _play(elo_a, elo_b, rng, p, knockout, S):
 # ----------------------------------------------------------------------------
 # Main simulation
 # ----------------------------------------------------------------------------
+KO_STAGE_OF = {**{m: "LAST_32" for m in range(73, 89)},
+               **{m: "LAST_16" for m in range(89, 97)},
+               **{m: "QUARTER_FINALS" for m in range(97, 101)},
+               101: "SEMI_FINALS", 102: "SEMI_FINALS",
+               103: "THIRD_PLACE", 104: "FINAL"}
+
+
 def simulate(n_sims=50_000, params=None, seed=12345, data=None, table=None,
-             analyze=False):
+             analyze=False, fixed=None):
+    """fixed (optional) conditions the simulation on real results:
+      fixed["group"][(L, pair_idx)] = (goals_i, goals_j)  — goals for the teams at
+        positions i,j of PAIRS within group L (every sim replays that exact score)
+      fixed["ko"][stage] = [(home_id, away_id, winner_id), ...] — wherever a sim's
+        knockout tie has that exact pairing, the real winner advances
+    """
     p = dict(DEFAULT_PARAMS, **(params or {}))
     d = data or load_data()
     if table is None:
         table = build_third_assignment_table(d["bracket"])
+    fx_group = (fixed or {}).get("group", {})
+    fx_ko = (fixed or {}).get("ko", {})
     rng = np.random.default_rng(seed)
     S = n_sims
     rating = make_ratings(d, p["w_elo"], p["w_mkt"], p["w_fifa"], p["use_market"])
@@ -210,7 +226,7 @@ def simulate(n_sims=50_000, params=None, seed=12345, data=None, table=None,
     wincnt = {} if analyze else None   # match -> (48,) winner counts
 
     # --- Group stage ------------------------------------------------------
-    PAIRS = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]
+    PAIRS = PAIRS_GROUP
     gw_letter, gr_letter = {}, {}
     third_team = np.zeros((S, 12), dtype=np.int64)
     third_score = np.zeros((S, 12))
@@ -222,12 +238,18 @@ def simulate(n_sims=50_000, params=None, seed=12345, data=None, table=None,
         pts = np.zeros((S, 4)); gd = np.zeros((S, 4))
         gf = np.zeros((S, 4)); gwins = np.zeros((S, 4))
         for pidx, (i, j) in enumerate(PAIRS):
-            gaf, gte = gpa[pidx], gpt[pidx]
-            ei, ej = base[i], base[j]
-            if use_v:
-                ei = ei + _alt_adj(ha[i], ha[j], gaf, VP) + _heat_adj(ca[i], ca[j], gte, VP)
-                ej = ej + _alt_adj(ha[j], ha[i], gaf, VP) + _heat_adj(ca[j], ca[i], gte, VP)
-            aw, ga, gb = _play(ei, ej, rng, p, False, S)
+            if (L, pidx) in fx_group:            # match already played for real
+                gi, gj = fx_group[(L, pidx)]
+                ga = np.full(S, gi, dtype=np.int64)
+                gb = np.full(S, gj, dtype=np.int64)
+                aw = ga > gb
+            else:
+                gaf, gte = gpa[pidx], gpt[pidx]
+                ei, ej = base[i], base[j]
+                if use_v:
+                    ei = ei + _alt_adj(ha[i], ha[j], gaf, VP) + _heat_adj(ca[i], ca[j], gte, VP)
+                    ej = ej + _alt_adj(ha[j], ha[i], gaf, VP) + _heat_adj(ca[j], ca[i], gte, VP)
+                aw, ga, gb = _play(ei, ej, rng, p, False, S)
             draw = ga == gb; jw = gb > ga
             pts[:, i] += 3 * aw + draw; pts[:, j] += 3 * jw + draw
             gd[:, i] += ga - gb;       gd[:, j] += gb - ga
@@ -268,7 +290,15 @@ def simulate(n_sims=50_000, params=None, seed=12345, data=None, table=None,
             ea = ea + _alt_adj(home_alt[a], home_alt[b], maf, VP) + _heat_adj(climate[a], climate[b], mte, VP)
             eb = eb + _alt_adj(home_alt[b], home_alt[a], maf, VP) + _heat_adj(climate[b], climate[a], mte, VP)
         aw, _, _ = _play(ea, eb, rng, p, True, S)
-        return np.where(aw, a, b), np.where(aw, b, a)
+        win, los = np.where(aw, a, b), np.where(aw, b, a)
+        # condition on real knockout results: wherever a sim produced this exact
+        # pairing, the real winner advances (PK wins count, per the pool rule)
+        for (h, x, w) in fx_ko.get(KO_STAGE_OF[m], ()):
+            mask = ((a == h) & (b == x)) | ((a == x) & (b == h))
+            if mask.any():
+                win = np.where(mask, w, win)
+                los = np.where(mask, h + x - w, los)
+        return win, los
 
     winner_of, loser_of = {}, {}
     for mi, m in enumerate(d["bracket"]["r32"]):

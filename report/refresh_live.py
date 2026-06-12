@@ -37,12 +37,16 @@ for _, alloc in ballots:
 
 wins = json.loads((DATA / "results.json").read_text(encoding="utf-8")).get("wins", {})
 
-# reuse the sim 'mean' (expected net) already embedded — it is static post-deadline
+# tiebreak 'mean' = conditional expected net from refresh_cases.py (recomputed
+# whenever a match finishes); fall back to the embedded values if absent
 mean_by = {}
-m = re.search(r"const STANDINGS=(\[.*?\]);", REPORT.read_text(encoding="utf-8"), re.S)
-if m:
-    for r in json.loads(m.group(1)):
-        mean_by[r["name"]] = r["mean"]
+try:
+    mean_by = json.loads((DATA / "live_stats.json").read_text(encoding="utf-8"))["mean"]
+except (FileNotFoundError, KeyError, ValueError):
+    m = re.search(r"const STANDINGS=(\[.*?\]);", REPORT.read_text(encoding="utf-8"), re.S)
+    if m:
+        for r in json.loads(m.group(1)):
+            mean_by[r["name"]] = r["mean"]
 
 rows = []
 for lab, alloc in ballots:

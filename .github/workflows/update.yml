@@ -42,7 +42,11 @@ jobs:
         env:
           FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
         run: |
+          pip install -q numpy
           python report/fetch_matches.py
+          # best/worst-case re-sim (no-op if no new result); never block the
+          # standings/schedule refresh below if the sim itself breaks
+          python report/refresh_cases.py || echo "::warning::refresh_cases failed — standings still updated"
           python report/refresh_live.py
 
       - name: Commit & push if anything changed
