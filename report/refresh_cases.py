@@ -1,9 +1,11 @@
 """Conditional ベストケース/ワーストケース refresh — run in CI between
 fetch_matches.py and refresh_live.py.
 
-Recomputes every player's final-score distribution with the FINISHED matches
-fixed to their real results and only the remaining matches simulated
-(sim.tournament with fixed=...). Splices the new stats into FLOW / RIVALS /
+best/worst = THEORETICAL bounds (sim.theoretical): the exact max/min final
+score over all feasible completions of the tournament given the finished
+results — deterministic, noise-free, monotone. mean/median/percentiles come
+from a Monte-Carlo re-sim conditioned on the same finished results
+(sim.tournament with fixed=...). Splices the stats into FLOW / RIVALS /
 RIVDOM of both HTML files and writes data/live_stats.json (per-player means,
 used by refresh_live.py as the standings tiebreak).
 
@@ -23,6 +25,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
 from sim.tournament import load_data, simulate, PAIRS_GROUP
+from sim.theoretical import theoretical_bounds_all
 
 DATA = ROOT / "data"
 FILES = [HERE / "Totocalcio 2026.html", ROOT / "index.html"]
@@ -103,6 +106,17 @@ def stats_for(i):
             "pos": int(round(100 * float((arr >= 0).mean())))}
 
 STATS = {disp(lab): stats_for(i) for i, (lab, _) in enumerate(ballots)}
+
+# best/worst -> exact theoretical bounds (noise-free; the MC extremes above are
+# just samples and must lie inside them — assert that as a cross-check)
+print(f"cases: solving theoretical bounds ({2 * len(ballots)} optimizations)…")
+THEO = theoretical_bounds_all(PW, d=d, matches=sched)
+for i, (lab, _) in enumerate(ballots):
+    b, w = THEO[i]
+    assert b >= NET[i].max() - 1e-6 and w <= NET[i].min() + 1e-6, \
+        f"theoretical bounds inconsistent for {lab}: ({b},{w}) vs MC ({NET[i].max()},{NET[i].min()})"
+    STATS[disp(lab)]["best"] = int(b)
+    STATS[disp(lab)]["worst"] = int(w)
 
 # ---- splice into both HTML files -------------------------------------------
 STAT_KEYS = ("mean", "median", "best", "worst", "p5", "p25", "p75", "p95", "pos")
