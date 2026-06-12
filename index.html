@@ -736,7 +736,13 @@ function openModal(key){
   });
   document.getElementById('modalBody').innerHTML=mh;
   const s=d.stats;
-  document.getElementById('modalStat').innerHTML=
+  let cur='';
+  const st=STANDINGS.find(x=>x.name===key);
+  if(st&&SCHEDULE.finished>0){
+    const rk=STANDINGS.slice().sort((a,b)=>b.score-a.score).findIndex(x=>x.score===st.score)+1;  // 同点同順位
+    cur=`<span>現在 <b class="${st.score>0?'pos':(st.score<0?'neg':'')}">${fmtSigned(st.score)}</b>（${rk}位）</span>`;
+  }
+  document.getElementById('modalStat').innerHTML=cur+
     `<span>ベストケース（現時点） <b class="pos">${fmtSigned(s.best)}</b></span>`+
     `<span>ワーストケース（現時点） <b class="neg">${fmtSigned(s.worst)}</b></span>`;
   document.getElementById('modal').classList.add('open');
