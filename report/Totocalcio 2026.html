@@ -378,7 +378,7 @@ body.noscroll{overflow:hidden}
 .mdc{display:flex;align-items:baseline;gap:7px;font-size:13.5px;font-weight:700;min-width:0}
 .mdnm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mdwin{color:var(--faint);font-size:11px;font-weight:400;white-space:nowrap}
-.mtcur{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--faint);margin-left:10px;letter-spacing:0;text-transform:none;vertical-align:3px;white-space:nowrap}
+.mtcur{font-family:var(--mono);font-size:inherit;font-weight:700;color:var(--faint);margin-left:12px;letter-spacing:0;text-transform:none;white-space:nowrap}
 .mdmeta{font-family:var(--mono);font-size:9.5px;font-weight:400;color:var(--faint);white-space:nowrap}
 .mdpts{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
 .mdpts b{font-size:14px;color:var(--txt)}
@@ -560,8 +560,8 @@ body.noscroll{overflow:hidden}
   <div class="view" id="v-results" hidden>
 
   <section id="finres">
-    <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">Final Scores · Newest First</div><h2>終了した試合</h2></div>
-      <div class="note">新しい順。薄字＝何組／決勝トーナメントの回戦。反映は試合終了から通常30分前後（最大3時間ほど）。国名クリックでその国の日程。</div></div>
+    <div class="shead"><div class="num">01</div><div class="tt"><div class="ek">Last 3 Results</div><h2>終了した試合</h2></div>
+      <div class="note">直近3試合（新しい順）。薄字＝何組／決勝トーナメントの回戦。反映は試合終了から通常30分前後（最大3時間ほど）。国名クリックでその国の日程。</div></div>
     <div class="schedscroll"><div id="finBody"></div></div>
   </section>
 
@@ -937,7 +937,7 @@ function renderSchedule(){
 function renderFinished(){
   const wrap=document.getElementById('finBody'); if(!wrap) return;
   const zone=zoneOf();
-  const ms=SCHEDULE.matches.filter(m=>m.status==='FINISHED').slice().reverse();
+  const ms=SCHEDULE.matches.filter(m=>m.status==='FINISHED').slice().reverse().slice(0,3);  // 直近3試合
   let h='', cur='';
   ms.forEach(m=>{
     const dk=dKey(m.utc,zone);
@@ -1062,6 +1062,34 @@ function switchView(v){
   if(('#'+v)!==location.hash) history.replaceState(null,'','#'+v);
   window.scrollTo(0,0);
 }
+// ---- swipe left/right to move between views (ポップアップ表示中・横スクロール表内は無効) ----
+(function(){
+  const VIEWS=['home','schedule','results','ai'];
+  let x0=null,y0=0,skip=false;
+  function inHScroll(el){
+    for(let n=el;n&&n.nodeType===1&&n!==document.body;n=n.parentElement){
+      const s=getComputedStyle(n);
+      if(/(auto|scroll)/.test(s.overflowX)&&n.scrollWidth>n.clientWidth+4)return true;
+    }
+    return false;
+  }
+  document.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1){x0=null;return;}
+    x0=e.touches[0].clientX;y0=e.touches[0].clientY;
+    skip=inHScroll(e.target);
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(x0===null||skip)return;
+    const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0;
+    x0=null;
+    if(document.querySelector('.modal.open'))return;
+    if(Math.abs(dx)<70||Math.abs(dy)>Math.abs(dx)*0.7)return;   // 縦スクロールと区別
+    const cur=VIEWS.find(v=>{const el=document.getElementById('v-'+v);return el&&!el.hidden;});
+    const i=VIEWS.indexOf(cur); if(i<0)return;
+    const ni=i+(dx<0?1:-1);
+    if(ni>=0&&ni<VIEWS.length)switchView(VIEWS[ni]);
+  },{passive:true});
+})();
 (function(){
   renderNext3(); renderKO();
   document.querySelectorAll('[data-v]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.v)));
