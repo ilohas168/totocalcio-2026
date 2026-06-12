@@ -397,6 +397,7 @@ body.noscroll{overflow:hidden}
 .mdc{display:flex;align-items:baseline;gap:7px;font-size:13.5px;font-weight:700;min-width:0}
 .mdnm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mdwin{color:var(--faint);font-size:11px;font-weight:400;white-space:nowrap}
+.mtcur{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--faint);margin-left:10px;letter-spacing:0;text-transform:none;vertical-align:3px;white-space:nowrap}
 .mdmeta{font-family:var(--mono);font-size:9.5px;font-weight:400;color:var(--faint);white-space:nowrap}
 .mdpts{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
 .mdpts b{font-size:14px;color:var(--txt)}
@@ -721,7 +722,11 @@ function winsSoFar(){            // 国ごとの現在の勝利数（プール�
 }
 function openModal(key){
   const d=FLOW[key]; if(!d) return;
-  document.getElementById('modalTitle').textContent=key;
+  const st=STANDINGS.find(x=>x.name===key), tEl=document.getElementById('modalTitle');
+  if(st&&SCHEDULE.finished>0){
+    const rk=STANDINGS.slice().sort((a,b)=>b.score-a.score).findIndex(x=>x.score===st.score)+1;  // 同点同順位
+    tEl.innerHTML=`${key}<span class="mtcur">${rk}位 <b class="${st.score>0?'pos':(st.score<0?'neg':'')}">${fmtSigned(st.score)}</b></span>`;
+  }else tEl.textContent=key;
   const rows=d.rows.slice().sort((a,b)=>(b[2]-a[2])||a[0].localeCompare(b[0]));   // 配点 desc, then name
   const W=winsSoFar();
   let mh='', divShown=false;
@@ -736,13 +741,7 @@ function openModal(key){
   });
   document.getElementById('modalBody').innerHTML=mh;
   const s=d.stats;
-  let cur='';
-  const st=STANDINGS.find(x=>x.name===key);
-  if(st&&SCHEDULE.finished>0){
-    const rk=STANDINGS.slice().sort((a,b)=>b.score-a.score).findIndex(x=>x.score===st.score)+1;  // 同点同順位
-    cur=`<span>現在 <b class="${st.score>0?'pos':(st.score<0?'neg':'')}">${fmtSigned(st.score)}</b>（${rk}位）</span>`;
-  }
-  document.getElementById('modalStat').innerHTML=cur+
+  document.getElementById('modalStat').innerHTML=
     `<span>ベストケース（現時点） <b class="pos">${fmtSigned(s.best)}</b></span>`+
     `<span>ワーストケース（現時点） <b class="neg">${fmtSigned(s.worst)}</b></span>`;
   document.getElementById('modal').classList.add('open');
