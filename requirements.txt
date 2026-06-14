@@ -1,0 +1,11 @@
+# Python deps for the totocalcio toolchain.
+#   python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+#
+# Live update pipeline (fetch_matches.py -> refresh_cases.py -> refresh_live.py)
+# needs only numpy + pulp; CI installs exactly those two.
+numpy        # vectorized Monte-Carlo + scoring   (tested 2.4.6)
+pulp         # CBC MILP for the theoretical best/worst bounds   (tested 3.3.2)
+
+# Offline analysis only — calibration sanity check (sim/tournament.py main),
+# sim/sensitivity.py, report/generate_report.py. Not needed for live updates.
+scipy        # Spearman correlation in the calibration report   (tested 1.17.1)
