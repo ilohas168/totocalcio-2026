@@ -60,8 +60,20 @@ def api(path, retries=5):
             print(f"  {type(e).__name__} ({e}); retry {attempt}/{retries} in {wait}s")
             time.sleep(wait)
 
+# Previously recorded results. fetch rebuilds schedule.json from scratch each
+# run, so without this it has no memory: a finished match whose result the
+# free-tier matches list momentarily drops back to IN_PLAY / FINISHED-with-null
+# would be overwritten and "un-finish". That actually wiped Canada–Bosnia's
+# confirmed 1-1 a full day later (2026-06-14). A finished football match never
+# un-finishes, so a stored FINISHED-with-score is authoritative and is never
+# downgraded by a flakier later response.
+prev = {}
+if (DATA / "schedule.json").exists():
+    for m in json.loads((DATA / "schedule.json").read_text(encoding="utf-8")).get("matches", []):
+        prev[m["id"]] = m
+
 ms = api("/competitions/WC/matches")["matches"]
-sched, wins = [], {}
+sched = []
 for m in ms:
     home = canon(m["homeTeam"].get("name"))
     away = canon(m["awayTeam"].get("name"))
@@ -72,24 +84,31 @@ for m in ms:
     sc = m.get("score") or {}
     ft = sc.get("fullTime") or {}
     w = sc.get("winner")  # HOME_TEAM / AWAY_TEAM / DRAW
-    if st == "FINISHED":
-        if ft.get("home") is None or ft.get("away") is None or w is None:
-            # The API transiently flags a match FINISHED before the final
-            # score/winner are published (seen after MEX–RSA on 2026-06-11).
-            # Keep it as in-play so the page shows "vs" instead of null–null
-            # and no win is credited until the result is actually confirmed.
-            rec["status"] = "IN_PLAY"
-            sched.append(rec)
-            continue
+    if st == "FINISHED" and ft.get("home") is not None and ft.get("away") is not None and w is not None:
         rec["score"] = [ft["home"], ft["away"]]
         pen = sc.get("penalties") or {}
         if pen.get("home") is not None:
             rec["pens"] = [pen["home"], pen["away"]]
         rec["winner"] = w
-        adv = home if w == "HOME_TEAM" else (away if w == "AWAY_TEAM" else None)
-        if adv:                       # group win or knockout advance (incl. penalties)
-            wins[adv] = wins.get(adv, 0) + 1
+    else:
+        # No usable final result this time. Keep a previously confirmed one if we
+        # have it; otherwise a bare FINISHED (null score) shows as in-play so the
+        # page renders "vs" rather than null–null, and credits no win yet.
+        p = prev.get(m["id"])
+        if p and p.get("status") == "FINISHED" and p.get("score"):
+            rec = p
+        elif st == "FINISHED":
+            rec["status"] = "IN_PLAY"
     sched.append(rec)
+
+# wins from the merged, authoritative records: group win or knockout advance
+# (PK win included, since the API sets winner to the shootout winner)
+wins = {}
+for rec in sched:
+    if rec.get("winner") in ("HOME_TEAM", "AWAY_TEAM"):
+        adv = rec["home"] if rec["winner"] == "HOME_TEAM" else rec["away"]
+        if adv:
+            wins[adv] = wins.get(adv, 0) + 1
 
 DATA.mkdir(exist_ok=True)
 (DATA / "schedule.json").write_text(
