@@ -16,6 +16,16 @@
 **公開先**: https://ilohas168.github.io/totocalcio-2026/ （GitHub Pages, repo ルートの `index.html`）
 **リポジトリ**: https://github.com/ilohas168/totocalcio-2026
 
+## このMac上の場所
+
+- **プロジェクトのパス**: `/Users/shin/projects/totocalcio`（このMac "dakara", ユーザー `shin`）
+- 仮想環境: `/Users/shin/projects/totocalcio/.venv`（Python実行は `.venv/bin/python`）
+- APIトークン: `/Users/shin/projects/totocalcio/.env`（gitignore。`FOOTBALL_DATA_TOKEN=...` の1行）
+- リモート: `origin` = `https://github.com/ilohas168/totocalcio-2026.git`（`gh` で `ilohas168` ログイン済み）
+- デスクトップ版Claudeで開くとき: 上のフォルダを指定すれば、この `HANDOFF.md` が読める。
+  別のMacに移す場合のセットアップは末尾「開発環境セットアップ」を参照（`.venv` と `.env` は
+  git管理外なので作り直し／コピーが要る）。
+
 ## 現在の状況（2026-06-14 時点）
 
 - グループ戦が進行中。8試合終了。勝利: Mexico, South Korea, United States, Scotland, Australia 各1。
