@@ -1,9 +1,11 @@
 """Exact theoretical best/worst-case final score per player.
 
 The pool score is Σ_C PW(C)·W_C where W_C = wins of country C (group wins;
-knockout advances incl. PK). Given the finished results, every remaining group
-match is a free 3-way choice (home/draw/away) and every remaining knockout
-match a free 2-way choice (PK makes any winner possible), with scorelines free.
+knockout advances incl. PK). Two special pool rules: the FINAL win counts
+double (champion bonus) and the THIRD_PLACE playoff is a 番外 exhibition that
+never counts. Given the finished results, every remaining group match is a free
+3-way choice (home/draw/away) and every remaining knockout match a free 2-way
+choice (PK makes any winner possible), with scorelines free.
 The theoretical best (worst) is the exact maximum (minimum) of the player's
 final score over all feasible completions — a combinatorial optimization, not
 a simulation, so the value is deterministic, noise-free, and monotone as
@@ -228,12 +230,10 @@ def _optimize_milp(PW, d, gfix, table, profiles):
         return {t: store[L, t] for t in tidx_of[L]}
 
     win = {}
-    pres = {}
     for mt in d["bracket"]["r32"]:
         mnum = mt["match"]
         ph = presence_r32(mt["home"], mnum)
         pa = presence_r32(mt["away"], mnum)
-        pres[mnum] = (ph, pa)
         win[mnum] = {t: pulp.LpVariable(f"win_{mnum}_{t}", cat="Binary")
                      for t in set(ph) | set(pa)}
         for t, v in win[mnum].items():
@@ -245,24 +245,16 @@ def _optimize_milp(PW, d, gfix, table, profiles):
         f1, f2 = ko[str(mnum)]
         ph = {t: v for t, v in win[f1].items()}
         pa = {t: v for t, v in win[f2].items()}
-        pres[mnum] = (ph, pa)
         win[mnum] = {t: pulp.LpVariable(f"win_{mnum}_{t}", cat="Binary")
                      for t in set(ph) | set(pa)}
         for t, v in win[mnum].items():
             prob += v <= ph.get(t, 0) + pa.get(t, 0)
         prob += pulp.lpSum(win[mnum].values()) == 1
         obj += [PW[t] * v for t, v in win[mnum].items()]
-    # third-place playoff: semifinal losers
-    lose = {}
-    for sf in (101, 102):
-        ph, pa = pres[sf]
-        lose[sf] = {t: ph.get(t, 0) + pa.get(t, 0) - win[sf][t] for t in win[sf]}
-    win[103] = {t: pulp.LpVariable(f"win_103_{t}", cat="Binary")
-                for t in set(lose[101]) | set(lose[102])}
-    for t, v in win[103].items():
-        prob += v <= lose[101].get(t, 0) + lose[102].get(t, 0)
-    prob += pulp.lpSum(win[103].values()) == 1
-    obj += [PW[t] * v for t, v in win[103].items()]
+    # champion bonus: the FINAL (104) win counts double — count its winner once
+    # more. The THIRD_PLACE playoff is a 番外 exhibition that never counts, so it
+    # contributes no variable and no objective term at all.
+    obj += [PW[t] * v for t, v in win[104].items()]
 
     prob += pulp.lpSum(obj)
     status = prob.solve(pulp.PULP_CBC_CMD(msg=False))
@@ -301,18 +293,13 @@ def _verify_milp(PW, d, profiles, x, mv, masks, win, val):
         assert w in (a, b), f"match {mnum}: winner {w} not in ({a},{b})"
         winner[mnum] = w; total += PW[w]
     ko = d["bracket"]["knockout"]
-    sf_lose = {}
     for mnum in [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 104]:
         f1, f2 = ko[str(mnum)]
         a, b = winner[f1], winner[f2]
         w = next(t for t, v in win[mnum].items() if v.value() > 0.5)
         assert w in (a, b), f"match {mnum}: winner {w} not in ({a},{b})"
         winner[mnum] = w; total += PW[w]
-        if mnum in (101, 102):
-            sf_lose[mnum] = a if w == b else b
-    w3 = next(t for t, v in win[103].items() if v.value() > 0.5)
-    assert w3 in (sf_lose[101], sf_lose[102])
-    total += PW[w3]
+    total += PW[winner[104]]   # FINAL counts double (champion bonus)
     assert int(round(total)) == val, f"verification {total} != objective {val}"
 
 
@@ -368,12 +355,9 @@ def _optimize_ko_dp(PW, d, gfix, kfix, r32_real, table):
         f[mnum] = {t: PW[t] for t in cand}
     ko = d["bracket"]["knockout"]
     stage_of = {m: s for s, ms in KO_STAGES.items() for m in ms}
-    pairf = {}                   # for SFs: (winner, loser) -> value
     for mnum in [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102]:
         f1, f2 = ko[str(mnum)]
         f[mnum] = {}
-        if mnum in (101, 102):
-            pairf[mnum] = {}
         for a, va in f[f1].items():
             for b, vb in f[f2].items():
                 w = force_of(stage_of[mnum], a, b)
@@ -381,18 +365,14 @@ def _optimize_ko_dp(PW, d, gfix, kfix, r32_real, table):
                     v = va + vb + PW[t]
                     if v > f[mnum].get(t, -1e18):
                         f[mnum][t] = v
-                    if mnum in (101, 102):
-                        l = a if t == b else b
-                        if v > pairf[mnum].get((t, l), -1e18):
-                            pairf[mnum][(t, l)] = v
+    # FINAL counts double (champion bonus); the THIRD_PLACE playoff is a 番外
+    # exhibition that never counts, so it contributes nothing.
     best = -1e18
-    for (w1, l1), v1 in pairf[101].items():
-        for (w2, l2), v2 in pairf[102].items():
+    for w1, v1 in f[101].items():
+        for w2, v2 in f[102].items():
             wf = force_of("FINAL", w1, w2)
-            w3 = force_of("THIRD_PLACE", l1, l2)
-            vf = PW[wf] if wf is not None else max(PW[w1], PW[w2])
-            v3 = PW[w3] if w3 is not None else max(PW[l1], PW[l2])
-            best = max(best, v1 + v2 + vf + v3)
+            vf = 2 * (PW[wf] if wf is not None else max(PW[w1], PW[w2]))
+            best = max(best, v1 + v2 + vf)
     return int(round(banked + best))
 
 

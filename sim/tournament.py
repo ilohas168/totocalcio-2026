@@ -3,7 +3,9 @@
 
 Estimates E[W_C] = expected number of wins per country over the whole tournament
 (a "win" = winning a GROUP match [group draws excluded] or a KNOCKOUT match
-[shootout wins count]). Also returns the JOINT win-count matrix (n_sims x 48).
+[shootout wins count]). Two special pool rules: the FINAL win counts double
+(champion bonus) and the THIRD_PLACE playoff is a 番外 exhibition that never
+counts. Also returns the JOINT win-count matrix (n_sims x 48).
 
 Strength model:
   - base rating = standardized blend of World-Football Elo and market-implied
@@ -321,9 +323,12 @@ def simulate(n_sims=50_000, params=None, seed=12345, data=None, table=None,
         wins[rows, win] += 1
         if analyze:
             wincnt[m] = np.bincount(win, minlength=48)
+    # champion bonus: winning the FINAL (104) counts as 2 wins
+    wins[rows, winner_of[104]] += 1
 
-    win, _ = ko_play(loser_of[101], loser_of[102], 103)  # third-place playoff
-    wins[rows, win] += 1
+    # third-place playoff (103) is a 番外 exhibition — it credits NO pool win
+    # (win or lose is a no-count). Still simulated so analyze can report its odds.
+    win, _ = ko_play(loser_of[101], loser_of[102], 103)
     if analyze:
         wincnt[103] = np.bincount(win, minlength=48)
 

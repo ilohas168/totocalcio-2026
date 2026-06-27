@@ -6,7 +6,9 @@ Writes:
   data/results.json   — wins per country under the pool rule
 
 Pool 'win' rule: group-stage win (a draw counts for nobody) OR any knockout
-advance (round-of-32 → final, including a penalty-shootout win).
+advance (round-of-32 → final, including a penalty-shootout win). Two special
+pool rules: the FINAL win counts double (champion bonus, +1 extra) and the
+THIRD_PLACE playoff is a 番外 exhibition that never counts (no win for anyone).
 
 Run locally:  python report/fetch_matches.py   (reads FOOTBALL_DATA_TOKEN from env or .env)
 In CI:        set FOOTBALL_DATA_TOKEN as a secret env var.
@@ -102,13 +104,18 @@ for m in ms:
     sched.append(rec)
 
 # wins from the merged, authoritative records: group win or knockout advance
-# (PK win included, since the API sets winner to the shootout winner)
+# (PK win included, since the API sets winner to the shootout winner). Two
+# special pool rules apply to the last two matches:
+#   - THIRD_PLACE: a 番外 exhibition — credits no win to anyone (skip it).
+#   - FINAL: the champion's win counts double (+1 bonus), so 2 wins.
 wins = {}
 for rec in sched:
+    if rec["stage"] == "THIRD_PLACE":            # exhibition — no pool win
+        continue
     if rec.get("winner") in ("HOME_TEAM", "AWAY_TEAM"):
         adv = rec["home"] if rec["winner"] == "HOME_TEAM" else rec["away"]
         if adv:
-            wins[adv] = wins.get(adv, 0) + 1
+            wins[adv] = wins.get(adv, 0) + (2 if rec["stage"] == "FINAL" else 1)
 
 DATA.mkdir(exist_ok=True)
 (DATA / "schedule.json").write_text(
