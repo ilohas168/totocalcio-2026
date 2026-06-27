@@ -37,27 +37,36 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Fetch results + refresh live sections
+      - name: Fetch results, refresh live sections, and push
         if: steps.window.outputs.go == 'yes'
         env:
           FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
         run: |
           pip install -q numpy pulp
-          python report/fetch_matches.py
-          # best/worst-case re-sim (no-op if no new result); never block the
-          # standings/schedule refresh below if the sim itself breaks
-          python report/refresh_cases.py || echo "::warning::refresh_cases failed — standings still updated"
-          python report/refresh_live.py
-
-      - name: Commit & push if anything changed
-        if: steps.window.outputs.go == 'yes'
-        run: |
           git config user.name  "totocalcio-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "no changes"
-          else
+          # A manual push (or external workflow_dispatch) can land between this
+          # runner's checkout and its push, rejecting us with "fetch first".
+          # Every file the pipeline writes is generated, so on a rejection we
+          # discard our work, re-sync to the latest origin/main, and regenerate
+          # rather than merge — no conflicts, and the commit always reflects the
+          # freshest results.
+          for attempt in 1 2 3 4 5; do
+            git fetch --quiet origin main
+            git reset --hard --quiet FETCH_HEAD
+            python report/fetch_matches.py
+            # best/worst-case re-sim (no-op if no new result); never block the
+            # standings/schedule refresh below if the sim itself breaks
+            python report/refresh_cases.py || echo "::warning::refresh_cases failed — standings still updated"
+            python report/refresh_live.py
+            git add -A
+            if git diff --cached --quiet; then
+              echo "no changes"; exit 0
+            fi
             git commit -m "live: auto-update standings + schedule [skip ci]"
-            git push
-          fi
+            if git push; then
+              echo "pushed on attempt $attempt"; exit 0
+            fi
+            echo "push rejected (remote advanced) — resyncing and retrying ($attempt/5)"
+          done
+          echo "::error::failed to push live update after 5 attempts"; exit 1
