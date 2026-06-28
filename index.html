@@ -1079,6 +1079,10 @@ function renderKO(){
   // real KO results, indexed by unordered team pair (football-data fills KO teams once groups end)
   const byPair={};
   SCHEDULE.matches.forEach(m=>{ if(m.stage!=='GROUP_STAGE'&&m.home&&m.away) byPair[[m.home,m.away].slice().sort().join('|')]=m; });
+  // map each R32 slot-pairing to its football-data match, to use the real team assignments
+  const koNorm=(c)=>c.replace('①','1').replace('②','2').replace('3位','3');
+  const r32Match={};
+  SCHEDULE.matches.forEach(m=>{ if(m.stage==='LAST_32'){ const s=KO_SLOT[m.utc]; if(s) r32Match[koNorm(s[0])+'|'+koNorm(s[1])]=m; } });
   // R32 leaves in BRACKET-TREE order so each round's adjacent pair feeds the next round.
   // slot "A1"/"A2"=group winner/runner-up; "3"=one of the eight best 3rd-placed teams.
   const R32=[['A2','B2'],['F1','C2'],['E1','3'],['I1','3'],['K2','L2'],['H1','J2'],['D1','3'],['G1','3'],
@@ -1100,7 +1104,9 @@ function renderKO(){
     }
     return n;
   };
-  let lvl=R32.map(([s1,s2])=>mk(resolve(s1),resolve(s2)));
+  // prefer football-data's real R32 team once assigned (incl. the 3rd-place slots); else project
+  const leaf=(slot,m,which)=>{ const real=m&&(which==='a'?m.home:m.away); return real?{nm:real}:resolve(slot); };
+  let lvl=R32.map(([s1,s2])=>{ const m=r32Match[s1+'|'+s2]; return mk(leaf(s1,m,'a'),leaf(s2,m,'b')); });
   const levels=[lvl];
   while(lvl.length>1){                    // pair adjacent winners up the tree
     const nx=[];
