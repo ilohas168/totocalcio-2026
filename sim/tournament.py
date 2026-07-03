@@ -207,6 +207,9 @@ def simulate(n_sims=50_000, params=None, seed=12345, data=None, table=None,
         positions i,j of PAIRS within group L (every sim replays that exact score)
       fixed["ko"][stage] = [(home_id, away_id, winner_id), ...] — wherever a sim's
         knockout tie has that exact pairing, the real winner advances
+      fixed["r32"][match_num] = (home_id, away_id) — real R32 pairing for that
+        bracket slot, overriding the Annex-C third-place approximation so the
+        Monte-Carlo bracket matches reality once the R32 draw is known
     """
     p = dict(DEFAULT_PARAMS, **(params or {}))
     d = data or load_data()
@@ -214,6 +217,7 @@ def simulate(n_sims=50_000, params=None, seed=12345, data=None, table=None,
         table = build_third_assignment_table(d["bracket"])
     fx_group = (fixed or {}).get("group", {})
     fx_ko = (fixed or {}).get("ko", {})
+    fx_r32 = (fixed or {}).get("r32", {})
     rng = np.random.default_rng(seed)
     S = n_sims
     rating = make_ratings(d, p["w_elo"], p["w_mkt"], p["w_fifa"], p["use_market"])
@@ -304,7 +308,11 @@ def simulate(n_sims=50_000, params=None, seed=12345, data=None, table=None,
 
     winner_of, loser_of = {}, {}
     for mi, m in enumerate(d["bracket"]["r32"]):
-        a = resolve(m["home"], m["match"]); b = resolve(m["away"], m["match"])
+        if m["match"] in fx_r32:                 # real R32 draw known — use it exactly
+            ha, hb = fx_r32[m["match"]]
+            a = np.full(S, ha, dtype=np.int64); b = np.full(S, hb, dtype=np.int64)
+        else:
+            a = resolve(m["home"], m["match"]); b = resolve(m["away"], m["match"])
         win, los = ko_play(a, b, m["match"])
         winner_of[m["match"]] = win; loser_of[m["match"]] = los
         wins[rows, win] += 1

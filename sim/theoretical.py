@@ -396,6 +396,38 @@ def _match_real(d, r32_real, rank):
     return out
 
 
+def _group_rank(d, gfix):
+    """Final 1st..4th team ids per group from the fixed group results (same
+    comparator the DP uses: pts, GD, GF, then name)."""
+    tidx_of = {L: list(d["groups"][L]) for L in GROUP_LETTERS}
+    rank = {}
+    for L in GROUP_LETTERS:
+        gl = tidx_of[L]
+        pts, gd, gf = [0] * 4, [0] * 4, [0] * 4
+        for p, (gi, gj) in gfix.get(L, {}).items():
+            i, j = PAIRS_GROUP[p]
+            gd[i] += gi - gj; gd[j] += gj - gi; gf[i] += gi; gf[j] += gj
+            if gi > gj:   pts[i] += 3
+            elif gj > gi: pts[j] += 3
+            else:         pts[i] += 1; pts[j] += 1
+        order = sorted(range(4), key=lambda a: (-pts[a], -gd[a], -gf[a], d["names"][gl[a]]))
+        rank[L] = [gl[a] for a in order]
+    return rank
+
+
+def real_r32_pairs(d, matches):
+    """Real R32 pairings mapped onto bracket.json's r32 slots, so the Monte-Carlo
+    can condition on the exact bracket instead of the Annex-C third-place
+    approximation. -> {bracket_match_num: (home_id, away_id)} once the groups are
+    finished AND all 16 R32 pairings are known, else None."""
+    gfix, _, r32_real = parse_results(matches, d)
+    if len(r32_real) != 16 or not all(len(gfix.get(L, {})) == 6 for L in GROUP_LETTERS):
+        return None
+    rank = _group_rank(d, gfix)
+    return {mt["match"]: pair for mt, pair
+            in zip(d["bracket"]["r32"], _match_real(d, r32_real, rank))}
+
+
 # ---------------------------------------------------------------------------
 # public API
 # ---------------------------------------------------------------------------

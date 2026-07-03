@@ -25,7 +25,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
 from sim.tournament import load_data, simulate, PAIRS_GROUP
-from sim.theoretical import theoretical_bounds_all
+from sim.theoretical import theoretical_bounds_all, real_r32_pairs
 
 DATA = ROOT / "data"
 FILES = [HERE / "Totocalcio 2026.html", ROOT / "index.html"]
@@ -70,9 +70,15 @@ for m in fin:
         w = tidx[h] if m["winner"] == "HOME_TEAM" else tidx[a]
         fx_ko.setdefault(m["stage"], []).append((tidx[h], tidx[a], w))
 
+# once the R32 draw is known, pin the MC to the real bracket (same pairings the
+# theoretical bounds use) so its sampled scores stay within those exact bounds —
+# the Annex-C third-place approximation otherwise routes teams differently and
+# the MC can exceed the theoretical best/worst
+fx_r32 = real_r32_pairs(d, sched) or {}
 print(f"cases: conditioning on {len(fx_group)} group + "
-      f"{sum(len(v) for v in fx_ko.values())} KO results, {N_SIMS} sims")
-res = simulate(n_sims=N_SIMS, data=d, fixed={"group": fx_group, "ko": fx_ko})
+      f"{sum(len(v) for v in fx_ko.values())} KO results"
+      f"{f' + real R32 draw' if fx_r32 else ''}, {N_SIMS} sims")
+res = simulate(n_sims=N_SIMS, data=d, fixed={"group": fx_group, "ko": fx_ko, "r32": fx_r32})
 W = res["wins"].astype(float)
 
 # ---- per-player final-score distribution (same math as refresh_dashboard) --
