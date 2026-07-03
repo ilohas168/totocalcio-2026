@@ -87,10 +87,22 @@ for m in ms:
     ft = sc.get("fullTime") or {}
     w = sc.get("winner")  # HOME_TEAM / AWAY_TEAM / DRAW
     if st == "FINISHED" and ft.get("home") is not None and ft.get("away") is not None and w is not None:
-        rec["score"] = [ft["home"], ft["away"]]
         pen = sc.get("penalties") or {}
         if pen.get("home") is not None:
+            # A shootout match: football-data folds the penalties into fullTime
+            # (e.g. a 1-1 draw won 4-3 on pens is reported as fullTime 5-4). Store
+            # the score that actually stood — the post-extra-time draw
+            # (regularTime+extraTime) — and keep the shootout separately in pens.
+            rt = sc.get("regularTime") or {}
+            et = sc.get("extraTime") or {}
+            if rt.get("home") is not None:
+                rec["score"] = [(rt.get("home") or 0) + (et.get("home") or 0),
+                                (rt.get("away") or 0) + (et.get("away") or 0)]
+            else:                                   # fallback: back out pens from fullTime
+                rec["score"] = [ft["home"] - pen["home"], ft["away"] - pen["away"]]
             rec["pens"] = [pen["home"], pen["away"]]
+        else:
+            rec["score"] = [ft["home"], ft["away"]]
         rec["winner"] = w
     else:
         # No usable final result this time. Keep a previously confirmed one if we
